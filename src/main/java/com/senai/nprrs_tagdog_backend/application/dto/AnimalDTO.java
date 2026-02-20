@@ -29,13 +29,24 @@ public class AnimalDTO {
             PorteAnimal porte,
             @NotNull
             @NotBlank
-            @Schema(description = "Data de nascimento do animal", example = "19/02/2026")
+            @Schema(description = "Data de nascimento do animal", example = "2026-02-19")
             LocalDate dataNascimento,
             @NotNull
             @NotBlank
             @Schema(description = "Descricao do animal", example = "Alergia a chocolate")
             String descricao
-    ) {}
+    ) {
+        public Animal toEntity() {
+            return Animal.builder()
+                    .nome(this.nome)
+                    .raca(this.raca)
+                    .sexo(this.sexo)
+                    .porte(this.porte)
+                    .dataNascimento(this.dataNascimento)
+                    .descricao(this.descricao)
+                    .build();
+        }
+    }
     public record AnimalResponseDTO(
             @Schema(description = "Nome do animal")
             String cpfTutor,

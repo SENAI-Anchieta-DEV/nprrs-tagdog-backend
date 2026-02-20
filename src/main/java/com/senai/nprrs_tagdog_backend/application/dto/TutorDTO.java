@@ -41,7 +41,23 @@ public class TutorDTO {
             @NotBlank
             @Schema(description = "Lista de animais do tutor")
             List<AnimalDTO.AnimalRegistroDTO> animais
-    ) {}
+    ) {
+        public Tutor toEntity() {
+            return Tutor.builder()
+                    .nome(this.nome)
+                    .email(this.email)
+                    .senha(this.senha)
+                    .cpf(this.cpf)
+                    .telefone(this.telefone)
+                    .endereco(this.endereco.toEntity())
+                    .animais(this.animais.stream()
+                            .map(AnimalDTO.AnimalRegistroDTO::toEntity)
+                            .toList())
+                    .ativo(true)
+                    .role(Role.FUNCIONARIO)
+                    .build();
+        }
+    }
     public record TutorResponseDTO(
             @Schema(description = "Nome do tutor")
             String nome,

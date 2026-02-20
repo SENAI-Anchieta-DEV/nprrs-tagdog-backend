@@ -21,7 +21,15 @@ public class EnderecoDTO {
             @NotBlank
             @Schema(description = "Complemento do endereco", example = "Apartamento")
             String complemento
-    ) {}
+    ) {
+        public Endereco toEntity() {
+            return Endereco.builder()
+                    .cep(this.cep)
+                    .numero(this.numero)
+                    .complemento(this.complemento)
+                    .build();
+        }
+    }
     public record EnderecoResponseDTO(
             @Schema(description = "Cep do tutor")
             String cep,
