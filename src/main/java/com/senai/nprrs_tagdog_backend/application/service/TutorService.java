@@ -44,24 +44,11 @@ public class TutorService {
 
     @Transactional(readOnly = true)
     public TutorDTO.TutorResponseDTO buscarTutorAtivoPorEmailOuCpf(String emailOuCpf) {
-        if(tutorRepository.findByEmailAndAtivoTrue(emailOuCpf) != null){
-            return TutorDTO.TutorResponseDTO.fromEntity(tutorRepository.findByEmailAndAtivoTrue(emailOuCpf));
-        } else if(tutorRepository.findByCpfAndAtivoTrue(emailOuCpf) != null) {
-            return TutorDTO.TutorResponseDTO.fromEntity(tutorRepository.findByCpfAndAtivoTrue(emailOuCpf));
-        } else {
-            throw new RuntimeException(); //EntidadeNaoEncontradaException("Tutor")
-        }
+        return TutorDTO.TutorResponseDTO.fromEntity(buscarTutorPorEmailOuCpfEAtivoTrue(emailOuCpf));
     }
 
     public TutorDTO.TutorResponseDTO atualizarTutor(String emailOuCpf, TutorDTO.TutorAtualizacaoDTO dto) {
-        Tutor tutor;
-        if(tutorRepository.findByEmailAndAtivoTrue(emailOuCpf) != null){
-            tutor = tutorRepository.findByEmailAndAtivoTrue(emailOuCpf);
-        } else if(tutorRepository.findByCpfAndAtivoTrue(emailOuCpf) != null) {
-            tutor = tutorRepository.findByCpfAndAtivoTrue(emailOuCpf);
-        } else {
-            throw new RuntimeException(); //EntidadeNaoEncontradaException("Tutor")
-        }
+        Tutor tutor = buscarTutorPorEmailOuCpfEAtivoTrue(emailOuCpf);
 
         tutor.setNome(dto.nome());
         tutor.setEmail(dto.email());
@@ -73,6 +60,23 @@ public class TutorService {
         tutor.setEndereco(endereco);
 
         return TutorDTO.TutorResponseDTO.fromEntity(tutorRepository.save(tutor));
+    }
+
+    public void desativarTutor(String emailOuCpf) {
+        Tutor tutor = buscarTutorPorEmailOuCpfEAtivoTrue(emailOuCpf);
+
+        tutor.setAtivo(false);
+        tutorRepository.save(tutor);
+    }
+
+    private Tutor buscarTutorPorEmailOuCpfEAtivoTrue(String emailOuCpf){
+        if(tutorRepository.findByEmailAndAtivoTrue(emailOuCpf) != null){
+            return tutorRepository.findByEmailAndAtivoTrue(emailOuCpf);
+        } else if(tutorRepository.findByCpfAndAtivoTrue(emailOuCpf) != null) {
+            return tutorRepository.findByCpfAndAtivoTrue(emailOuCpf);
+        } else {
+            throw new RuntimeException(); //EntidadeNaoEncontradaException("Tutor")
+        }
     }
 
 }

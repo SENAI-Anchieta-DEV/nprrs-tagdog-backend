@@ -160,4 +160,30 @@ public class TutorController {
     public ResponseEntity<TutorDTO.TutorResponseDTO> atualizarTutorPorEmailOuCpf(@PathVariable String emailOuCpf, @Valid @RequestBody TutorDTO.TutorAtualizacaoDTO dto) {
         return ResponseEntity.ok(tutorService.atualizarTutor(emailOuCpf, dto));
     }
+
+    @Operation(
+            summary = "Desativar um tutor",
+            description = "Desativa um tutor da base de dados a partir do seu email",
+            parameters = {
+                    @Parameter(name = "emailOuCpf", description = "email ou cpf do tutor a ser desativado", example = "tutor@email.com")
+            },
+            responses = {
+                    @ApiResponse(responseCode = "204", description = "Tutor removido com sucesso"),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Usuário não encontrado",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    examples = {
+                                            @ExampleObject(name = "Tutor não encontrado", value = "\"Tutor não encontrado ou inativo\""),
+                                    }
+                            )
+                    )
+            }
+    )
+    @DeleteMapping("/emailOuCpf/{emailOuCpf}")
+    public ResponseEntity<Void> desativarTutor(@PathVariable String emailOuCpf) {
+        tutorService.desativarTutor(emailOuCpf);
+        return ResponseEntity.noContent().build();
+    }
 }
