@@ -1,6 +1,8 @@
 package com.senai.nprrs_tagdog_backend.application.service;
 
+import com.senai.nprrs_tagdog_backend.application.dto.FuncionarioDTO;
 import com.senai.nprrs_tagdog_backend.application.dto.TutorDTO;
+import com.senai.nprrs_tagdog_backend.domain.entity.Funcionario;
 import com.senai.nprrs_tagdog_backend.domain.entity.Tutor;
 import com.senai.nprrs_tagdog_backend.domain.repository.AnimalRepository;
 import com.senai.nprrs_tagdog_backend.domain.repository.EnderecoRepository;
@@ -40,4 +42,16 @@ public class TutorService {
                 .map(TutorDTO.TutorResponseDTO::fromEntity)
                 .toList();
     }
+
+    @Transactional(readOnly = true)
+    public TutorDTO.TutorResponseDTO buscarTutorAtivoPorEmailOuCpf(String emailOuCpf) {
+        if(tutorRepository.findByEmailAndAtivoTrue(emailOuCpf) != null){
+            return TutorDTO.TutorResponseDTO.fromEntity(tutorRepository.findByEmailAndAtivoTrue(emailOuCpf));
+        } else if(tutorRepository.findByCpfAndAtivoTrue(emailOuCpf) != null) {
+            return TutorDTO.TutorResponseDTO.fromEntity(tutorRepository.findByCpfAndAtivoTrue(emailOuCpf));
+        } else {
+            throw new RuntimeException(); //EntidadeNaoEncontradaException("Tutor")
+        }
+    }
+
 }

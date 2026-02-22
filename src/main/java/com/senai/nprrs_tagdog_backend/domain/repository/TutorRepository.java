@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface TutorRepository extends JpaRepository<Tutor, String> {
     List<Tutor> findAllByAtivoTrue();
+    Tutor findByEmailAndAtivoTrue(String email);
+    Tutor findByCpfAndAtivoTrue(String cpf);
 }

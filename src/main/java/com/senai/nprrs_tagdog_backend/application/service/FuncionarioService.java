@@ -31,11 +31,11 @@ public class FuncionarioService {
 
     @Transactional(readOnly = true)
     public FuncionarioDTO.FuncionarioResponseDTO buscarFuncionarioAtivoPorEmail(String email) {
-        return FuncionarioDTO.FuncionarioResponseDTO.fromEntity(buscarFuncionarioPorCpfEAtivoTrue(email));
+        return FuncionarioDTO.FuncionarioResponseDTO.fromEntity(buscarFuncionarioPorEmailEAtivoTrue(email));
     }
 
     public FuncionarioDTO.FuncionarioResponseDTO atualizarFuncionario(String email, FuncionarioDTO.FuncionarioRegistroDTO dto) {
-        Funcionario funcionario = buscarFuncionarioPorCpfEAtivoTrue(email);
+        Funcionario funcionario = buscarFuncionarioPorEmailEAtivoTrue(email);
 
         funcionario.setNome(dto.nome());
         funcionario.setEmail(dto.email());
@@ -44,14 +44,14 @@ public class FuncionarioService {
     }
 
     public void desativarFuncionario(String email) {
-        Funcionario funcionario = buscarFuncionarioPorCpfEAtivoTrue(email);
+        Funcionario funcionario = buscarFuncionarioPorEmailEAtivoTrue(email);
 
         funcionario.setAtivo(false);
         funcionarioRepository.save(funcionario);
     }
 
-    private Funcionario buscarFuncionarioPorCpfEAtivoTrue(String email){
+    private Funcionario buscarFuncionarioPorEmailEAtivoTrue(String email){
         return funcionarioRepository.findByEmailAndAtivoTrue(email).orElseThrow(
-                () -> new RuntimeException()); //EntidadeNaoEncontradaException("Cliente")
+                () -> new RuntimeException()); //EntidadeNaoEncontradaException("Funcionario")
     }
 }

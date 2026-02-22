@@ -3,6 +3,7 @@ package com.senai.nprrs_tagdog_backend.interface_ui.controller;
 import com.senai.nprrs_tagdog_backend.application.dto.TutorDTO;
 import com.senai.nprrs_tagdog_backend.application.service.TutorService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -89,5 +90,28 @@ public class TutorController {
     @GetMapping
     public ResponseEntity<List<TutorDTO.TutorResponseDTO>> listarFuncinariosAtivos() {
         return ResponseEntity.ok(tutorService.listarTutoresAtivos());
+    }
+
+    @Operation(
+            summary = "Buscar um funcionario ativo pelo email ou cpf",
+            description = "Retorna um funcionario cadastrado",
+            parameters = {
+                    @Parameter(name = "cpf", description = "email ou cpf do funcionario a ser buscado", example = "funcionario@email.com")
+            },
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Funcionario retornado com sucesso"),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Funcionario não encontrado",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    examples = @ExampleObject(name = "Funcionario não encontrado", value = "\"Funcionario com email funcionario@email.com não encontrado.\"")
+                            )
+                    )
+            }
+    )
+    @GetMapping("/emailOuCpf/{emailOuCpf}")
+    public ResponseEntity<TutorDTO.TutorResponseDTO> buscarFuncionarioAtivoPorEmailOuCpf(@PathVariable String emailOuCpf) {
+        return ResponseEntity.ok(tutorService.buscarTutorAtivoPorEmailOuCpf(emailOuCpf));
     }
 }

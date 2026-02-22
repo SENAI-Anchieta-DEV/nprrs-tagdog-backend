@@ -49,6 +49,7 @@ public class AnimalDTO {
                     .porte(this.porte)
                     .dataNascimento(this.dataNascimento)
                     .descricao(this.descricao)
+                    .ativo(true)
                     .build();
         }
     }
