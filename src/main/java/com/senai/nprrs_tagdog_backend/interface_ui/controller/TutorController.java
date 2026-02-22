@@ -96,7 +96,7 @@ public class TutorController {
             summary = "Buscar um funcionario ativo pelo email ou cpf",
             description = "Retorna um funcionario cadastrado",
             parameters = {
-                    @Parameter(name = "cpf", description = "email ou cpf do funcionario a ser buscado", example = "funcionario@email.com")
+                    @Parameter(name = "emailOuCpf", description = "email ou cpf do funcionario a ser buscado", example = "tutor@email.com")
             },
             responses = {
                     @ApiResponse(responseCode = "200", description = "Funcionario retornado com sucesso"),
@@ -105,13 +105,59 @@ public class TutorController {
                             description = "Funcionario não encontrado",
                             content = @Content(
                                     mediaType = "application/json",
-                                    examples = @ExampleObject(name = "Funcionario não encontrado", value = "\"Funcionario com email funcionario@email.com não encontrado.\"")
+                                    examples = @ExampleObject(name = "Tutor não encontrado", value = "\"Tutor com email tutor@email.com não encontrado.\"")
                             )
                     )
             }
     )
     @GetMapping("/emailOuCpf/{emailOuCpf}")
-    public ResponseEntity<TutorDTO.TutorResponseDTO> buscarFuncionarioAtivoPorEmailOuCpf(@PathVariable String emailOuCpf) {
+    public ResponseEntity<TutorDTO.TutorResponseDTO> buscarTutorAtivoPorEmailOuCpf(@PathVariable String emailOuCpf) {
         return ResponseEntity.ok(tutorService.buscarTutorAtivoPorEmailOuCpf(emailOuCpf));
+    }
+
+    @Operation(
+            summary = "Atualizar um tutor ativo pelo email ou cpf",
+            description = "Realiza a atualização do tutor",
+            parameters = {
+                    @Parameter(name = "emailOuCpf", description = "email ou cpf do tutor a ser atualizado", example = "tutor@email.com")
+            },
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    required = true,
+                    content = @Content(
+                            schema = @Schema(implementation = TutorDTO.TutorAtualizacaoDTO.class),
+                            examples = @ExampleObject(name = "Exemplo válido", value = """
+                                        {
+                                             "nome": "Nome",
+                                             "email": "tutor@email.com",
+                                             "senha": "senha",
+                                             "cpf": "111.111.111-11",
+                                             "telefone": "(11) 11111-1111",
+                                             "endereco": {
+                                                "cep": "111111-11",
+                                                "numero": "11",
+                                                "complemento": "Apartamento"
+                                             }
+                                         }
+                                    """
+                            )
+                    )
+            ),
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Atualização realizada com sucesso"),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Tutor não encontrado",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    examples = {
+                                            @ExampleObject(name = "Tutor não encontrado", value = "\"Tutor não encontrado ou inativo\""),
+                                    }
+                            )
+                    )
+            }
+    )
+    @PutMapping("/emailOuCpf/{emailOuCpf}")
+    public ResponseEntity<TutorDTO.TutorResponseDTO> atualizarTutorPorEmailOuCpf(@PathVariable String emailOuCpf, @Valid @RequestBody TutorDTO.TutorAtualizacaoDTO dto) {
+        return ResponseEntity.ok(tutorService.atualizarTutor(emailOuCpf, dto));
     }
 }

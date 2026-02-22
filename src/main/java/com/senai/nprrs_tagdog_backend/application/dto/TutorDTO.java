@@ -55,6 +55,32 @@ public class TutorDTO {
                     .build();
         }
     }
+    public record TutorAtualizacaoDTO(
+            @NotNull
+            @NotBlank
+            @Schema(description = "Nome do tutor", example = "Nome Sobrenome")
+            String nome,
+            @NotNull
+            @NotBlank
+            @Email
+            @Schema(description = "Email do tutor", example = "funcionario@email.com")
+            String email,
+            @NotNull
+            @NotBlank
+            @Schema(description = "Senha do tutor", example = "123")
+            String senha,
+            @NotNull
+            @NotBlank
+            @Schema(description = "Cpf do tutor", example = "111.111.111-11")
+            String cpf,
+            @NotNull
+            @NotBlank
+            @Schema(description = "Telefone do tutor", example = "(11) 11111-1111")
+            String telefone,
+            @NotNull
+            @Schema(description = "Endereco do tutor")
+            EnderecoDTO.EnderecoRegistroDTO endereco
+    ) {}
     public record TutorResponseDTO(
             @Schema(description = "Nome do tutor")
             String nome,

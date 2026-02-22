@@ -1,8 +1,7 @@
 package com.senai.nprrs_tagdog_backend.application.service;
 
-import com.senai.nprrs_tagdog_backend.application.dto.FuncionarioDTO;
 import com.senai.nprrs_tagdog_backend.application.dto.TutorDTO;
-import com.senai.nprrs_tagdog_backend.domain.entity.Funcionario;
+import com.senai.nprrs_tagdog_backend.domain.entity.Endereco;
 import com.senai.nprrs_tagdog_backend.domain.entity.Tutor;
 import com.senai.nprrs_tagdog_backend.domain.repository.AnimalRepository;
 import com.senai.nprrs_tagdog_backend.domain.repository.EnderecoRepository;
@@ -52,6 +51,28 @@ public class TutorService {
         } else {
             throw new RuntimeException(); //EntidadeNaoEncontradaException("Tutor")
         }
+    }
+
+    public TutorDTO.TutorResponseDTO atualizarTutor(String emailOuCpf, TutorDTO.TutorAtualizacaoDTO dto) {
+        Tutor tutor;
+        if(tutorRepository.findByEmailAndAtivoTrue(emailOuCpf) != null){
+            tutor = tutorRepository.findByEmailAndAtivoTrue(emailOuCpf);
+        } else if(tutorRepository.findByCpfAndAtivoTrue(emailOuCpf) != null) {
+            tutor = tutorRepository.findByCpfAndAtivoTrue(emailOuCpf);
+        } else {
+            throw new RuntimeException(); //EntidadeNaoEncontradaException("Tutor")
+        }
+
+        tutor.setNome(dto.nome());
+        tutor.setEmail(dto.email());
+        tutor.setSenha(dto.senha()); //funcionario.setSenha(passwordEncoder.encode(dto.senha()));
+        tutor.setCpf(dto.cpf());
+        tutor.setTelefone(dto.telefone());
+
+        Endereco endereco = enderecoRepository.save(dto.endereco().toEntity());
+        tutor.setEndereco(endereco);
+
+        return TutorDTO.TutorResponseDTO.fromEntity(tutorRepository.save(tutor));
     }
 
 }
