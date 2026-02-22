@@ -54,7 +54,7 @@ public class TutorService {
 
         tutor.setNome(dto.nome());
         tutor.setEmail(dto.email());
-        tutor.setSenha(dto.senha()); //funcionario.setSenha(passwordEncoder.encode(dto.senha()));
+        tutor.setSenha(passwordEncoder.encode(dto.senha()));
         tutor.setCpf(dto.cpf());
         tutor.setTelefone(dto.telefone());
 
