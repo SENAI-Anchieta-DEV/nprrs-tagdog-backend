@@ -15,10 +15,10 @@ import java.util.List;
 @SuperBuilder
 @DiscriminatorValue("TUTOR")
 public class Tutor extends Usuario{
-    @Column(nullable = false, unique = true, length = 14)
+    @Column(unique = true, length = 14)
     private String cpf;
 
-    @Column(nullable = false, length = 15)
+    @Column(length = 15)
     private String telefone;
 
     @OneToOne(cascade = CascadeType.ALL)

@@ -39,7 +39,7 @@ public class FuncionarioService {
 
         funcionario.setNome(dto.nome());
         funcionario.setEmail(dto.email());
-        funcionario.setEmail(dto.senha()); //funcionario.setSenha(passwordEncoder.encode(dto.senha()));
+        funcionario.setSenha(dto.senha()); //funcionario.setSenha(passwordEncoder.encode(dto.senha()));
         return FuncionarioDTO.FuncionarioResponseDTO.fromEntity(funcionarioRepository.save(funcionario));
     }
 
