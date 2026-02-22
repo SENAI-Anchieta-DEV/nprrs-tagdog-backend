@@ -1,6 +1,5 @@
 package com.senai.nprrs_tagdog_backend.application.dto;
 
-import com.senai.nprrs_tagdog_backend.domain.entity.Endereco;
 import com.senai.nprrs_tagdog_backend.domain.entity.Role;
 import com.senai.nprrs_tagdog_backend.domain.entity.Tutor;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -34,11 +33,9 @@ public class TutorDTO {
             @Schema(description = "Telefone do tutor", example = "(11) 11111-1111")
             String telefone,
             @NotNull
-            @NotBlank
             @Schema(description = "Endereco do tutor")
             EnderecoDTO.EnderecoRegistroDTO endereco,
             @NotNull
-            @NotBlank
             @Schema(description = "Lista de animais do tutor")
             List<AnimalDTO.AnimalRegistroDTO> animais
     ) {

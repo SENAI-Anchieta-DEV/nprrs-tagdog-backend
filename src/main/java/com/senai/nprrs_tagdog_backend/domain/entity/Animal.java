@@ -18,10 +18,7 @@ public class Animal{
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    @Column(nullable = false)
-    private String cpfTutor;
-
-    @Column(nullable = false) //GenerationType.SEQUENCE
+    @Column(nullable = false, unique = true)
     private String matricula;
 
     @Column(nullable = false)

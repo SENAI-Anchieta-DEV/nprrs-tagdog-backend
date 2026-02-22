@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.List;
 
 @Tag(name = "Tutor", description = "Gerenciamento de tutores")
 @RestController
@@ -43,14 +44,16 @@ public class TutorController {
                                              },
                                              "animais": [
                                                 {
+                                                    "matricula": "C12",
                                                     "nome": "Bob",
                                                     "raca": "Golden Retriever",
                                                     "sexo": "MACHO",
                                                     "porte": "GRANDE",
                                                     "dataNascimento": "2026-02-19",
                                                     "descricao": "Alergia a chocolate"
-                                                }
+                                                },
                                                 {
+                                                    "matricula": "C13",
                                                     "nome": "Bob 2",
                                                     "raca": "Golden Retriever",
                                                     "sexo": "MACHO",
@@ -74,5 +77,17 @@ public class TutorController {
         return ResponseEntity.created(
                 URI.create("/api/tutores/email/" + novoTutor.email())
         ).body(novoTutor);
+    }
+
+    @Operation(
+            summary = "Listar todos os tutores ativos",
+            description = "Retorna todos os tutores cadastrados",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Lista retornada com sucesso")
+            }
+    )
+    @GetMapping
+    public ResponseEntity<List<TutorDTO.TutorResponseDTO>> listarFuncinariosAtivos() {
+        return ResponseEntity.ok(tutorService.listarTutoresAtivos());
     }
 }

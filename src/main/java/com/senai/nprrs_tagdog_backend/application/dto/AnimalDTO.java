@@ -12,6 +12,10 @@ public class AnimalDTO {
     public record AnimalRegistroDTO(
             @NotNull
             @NotBlank
+            @Schema(description = "Matricula do animal", example = "C12")
+            String matricula,
+            @NotNull
+            @NotBlank
             @Email
             @Schema(description = "Nome do animal", example = "Bob")
             String nome,
@@ -38,6 +42,7 @@ public class AnimalDTO {
     ) {
         public Animal toEntity() {
             return Animal.builder()
+                    .matricula(this.matricula)
                     .nome(this.nome)
                     .raca(this.raca)
                     .sexo(this.sexo)
@@ -48,8 +53,6 @@ public class AnimalDTO {
         }
     }
     public record AnimalResponseDTO(
-            @Schema(description = "Nome do animal")
-            String cpfTutor,
             @Schema(description = "Matricula do animal")
             String matricula,
             @Schema(description = "Nome do animal")
@@ -71,7 +74,6 @@ public class AnimalDTO {
     ) {
         public static AnimalResponseDTO fromEntity(Animal animal) {
             return new AnimalResponseDTO(
-                    animal.getCpfTutor(),
                     animal.getMatricula(),
                     animal.getNome(),
                     animal.getRaca(),
