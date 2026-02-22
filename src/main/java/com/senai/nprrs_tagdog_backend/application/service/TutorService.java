@@ -7,6 +7,7 @@ import com.senai.nprrs_tagdog_backend.domain.repository.AnimalRepository;
 import com.senai.nprrs_tagdog_backend.domain.repository.EnderecoRepository;
 import com.senai.nprrs_tagdog_backend.domain.repository.TutorRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,15 +20,16 @@ public class TutorService {
     private final TutorRepository tutorRepository;
     private final AnimalRepository animalRepository;
     private final EnderecoRepository enderecoRepository;
-//    private final PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     public TutorDTO.TutorResponseDTO registrarTutor(TutorDTO.TutorRegistroDTO dto) {
         if(dto.animais().isEmpty()){
             throw new RuntimeException(); //Entidade animal nao encontrado
         }
 
-//        tutor.setSenha(passwordEncoder.encode(dto.senha()));
-        Tutor tutor = tutorRepository.save(dto.toEntity());
+        Tutor tutor = dto.toEntity();
+        tutor.setSenha(passwordEncoder.encode(dto.senha()));
+        tutorRepository.save(tutor);
         animalRepository.saveAll(tutor.getAnimais());
         enderecoRepository.save(dto.endereco().toEntity());
 

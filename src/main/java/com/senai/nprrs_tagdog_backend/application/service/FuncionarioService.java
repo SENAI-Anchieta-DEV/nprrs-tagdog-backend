@@ -4,6 +4,7 @@ import com.senai.nprrs_tagdog_backend.application.dto.FuncionarioDTO;
 import com.senai.nprrs_tagdog_backend.domain.entity.Funcionario;
 import com.senai.nprrs_tagdog_backend.domain.repository.FuncionarioRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,11 +15,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FuncionarioService {
     private final FuncionarioRepository funcionarioRepository;
-//    private final PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     public FuncionarioDTO.FuncionarioResponseDTO registrarFuncionario(FuncionarioDTO.FuncionarioRegistroDTO dto) {
-//        cliente.setSenha(passwordEncoder.encode(dto.senha()));
-        return FuncionarioDTO.FuncionarioResponseDTO.fromEntity(funcionarioRepository.save(dto.toEntity()));
+        Funcionario funcionario = dto.toEntity();
+        funcionario.setSenha(passwordEncoder.encode(dto.senha()));
+        return FuncionarioDTO.FuncionarioResponseDTO.fromEntity(funcionarioRepository.save(funcionario));
     }
 
     @Transactional(readOnly = true)
