@@ -1,7 +1,7 @@
 package com.senai.nprrs_tagdog_backend.domain.exceptions;
 
-public class OperacaoNaoPermitidaException extends RuntimeException {
-    public OperacaoNaoPermitidaException(String message) {
+public abstract class DominioException extends RuntimeException {
+    public DominioException(String message) {
         super(message);
     }
 }
