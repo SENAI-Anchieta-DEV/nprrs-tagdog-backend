@@ -2,12 +2,16 @@ package com.senai.nprrs_tagdog_backend.application.service;
 
 import com.senai.nprrs_tagdog_backend.application.dto.AuthDTO;
 import com.senai.nprrs_tagdog_backend.domain.entity.Usuario;
+import com.senai.nprrs_tagdog_backend.domain.exceptions.AcessoNegadoException;
 import com.senai.nprrs_tagdog_backend.domain.repository.UsuarioRepository;
 import com.senai.nprrs_tagdog_backend.infrastructure.security.JwtService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.BadCredentialsException;
+//import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import com.senai.nprrs_tagdog_backend.domain.exceptions.EntidadeNaoEncontradaException;
+import com.senai.nprrs_tagdog_backend.domain.exceptions.DadosInvalidosException;
+
 
 @Service
 @RequiredArgsConstructor
@@ -18,12 +22,15 @@ public class AuthService {
 
     public String login(AuthDTO.LoginRequest req) {
         Usuario usuario = usuarios.findByEmail(req.email())
-                .orElseThrow(() ->  new RuntimeException()); //EntidadeNaoEncontradaException("Usuário")
+                .orElseThrow(() ->  new EntidadeNaoEncontradaException("Usuário")); //EntidadeNaoEncontradaException("Usuário")
 
         if (!encoder.matches(req.senha(), usuario.getSenha())) {
-            throw new BadCredentialsException("Credenciais inválidas");
+            throw new DadosInvalidosException("Credenciais inválidas");
         }
 
+        if (!usuario.isAtivo()) {
+            throw new AcessoNegadoException();
+        }
         return jwt.generateToken(usuario.getEmail(), usuario.getRole().name());
     }
 }
