@@ -2,11 +2,14 @@ package com.senai.nprrs_tagdog_backend.application.service;
 
 import com.senai.nprrs_tagdog_backend.application.dto.FuncionarioDTO;
 import com.senai.nprrs_tagdog_backend.domain.entity.Funcionario;
+import com.senai.nprrs_tagdog_backend.domain.exceptions.ConflitosDeEstadoException;
+import com.senai.nprrs_tagdog_backend.domain.exceptions.EntidadeDuplicadaException;
 import com.senai.nprrs_tagdog_backend.domain.repository.FuncionarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.senai.nprrs_tagdog_backend.domain.exceptions.EntidadeNaoEncontradaException;
 
 import java.util.List;
 
@@ -18,6 +21,9 @@ public class FuncionarioService {
     private final PasswordEncoder passwordEncoder;
 
     public FuncionarioDTO.FuncionarioResponseDTO registrarFuncionario(FuncionarioDTO.FuncionarioRegistroDTO dto) {
+        if (funcionarioRepository.existsByEmail(dto.email())) { //fiz um metodo no Repository funcionario
+            throw new EntidadeDuplicadaException("Funcionário com este email");
+        }
         Funcionario funcionario = dto.toEntity();
         funcionario.setSenha(passwordEncoder.encode(dto.senha()));
         return FuncionarioDTO.FuncionarioResponseDTO.fromEntity(funcionarioRepository.save(funcionario));
@@ -48,12 +54,15 @@ public class FuncionarioService {
     public void desativarFuncionario(String email) {
         Funcionario funcionario = buscarFuncionarioPorEmailEAtivoTrue(email);
 
+        if (!funcionario.getAtivo()) { //Verificar se get ativo fica em usuario ou Funcionario entity
+            throw new ConflitosDeEstadoException("Funcionário já está desativado.");
+        }
         funcionario.setAtivo(false);
         funcionarioRepository.save(funcionario);
     }
 
     private Funcionario buscarFuncionarioPorEmailEAtivoTrue(String email){
         return funcionarioRepository.findByEmailAndAtivoTrue(email).orElseThrow(
-                () -> new RuntimeException()); //EntidadeNaoEncontradaException("Funcionario")
+                () -> new EntidadeNaoEncontradaException("Funcionário"));
     }
 }

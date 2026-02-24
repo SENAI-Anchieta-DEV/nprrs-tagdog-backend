@@ -3,6 +3,7 @@ package com.senai.nprrs_tagdog_backend.application.service;
 import com.senai.nprrs_tagdog_backend.application.dto.TutorDTO;
 import com.senai.nprrs_tagdog_backend.domain.entity.Endereco;
 import com.senai.nprrs_tagdog_backend.domain.entity.Tutor;
+import com.senai.nprrs_tagdog_backend.domain.exceptions.*;
 import com.senai.nprrs_tagdog_backend.domain.repository.AnimalRepository;
 import com.senai.nprrs_tagdog_backend.domain.repository.EnderecoRepository;
 import com.senai.nprrs_tagdog_backend.domain.repository.TutorRepository;
@@ -24,13 +25,27 @@ public class TutorService {
 
     public TutorDTO.TutorResponseDTO registrarTutor(TutorDTO.TutorRegistroDTO dto) {
         if(dto.animais().isEmpty()){
-            throw new RuntimeException(); //Entidade animal nao encontrado
+            throw new RegraNegocioException("Tutor deve possuir ao menos um animal");
+        }
+        if (tutorRepository.existsByEmail(dto.email())) {
+            throw new EntidadeDuplicadaException("Tutor com este email");
+        }
+        if (tutorRepository.existsByCpf(dto.cpf())) {
+            throw new EntidadeDuplicadaException("Tutor com este CPF");
         }
 
         Tutor tutor = dto.toEntity();
         tutor.setSenha(passwordEncoder.encode(dto.senha()));
         tutorRepository.save(tutor);
+
+        if (tutor.getAnimais().isEmpty()) {
+            throw new OperacaoNaoPermitidaException("Nenhum animal vinculado.");
+        }
         animalRepository.saveAll(tutor.getAnimais());
+
+        if (dto.endereco() == null) {
+            throw new DadosInvalidosException("Endereço é obrigatório.");
+        }
         enderecoRepository.save(dto.endereco().toEntity());
 
         return TutorDTO.TutorResponseDTO.fromEntity(tutor);
@@ -72,13 +87,19 @@ public class TutorService {
     }
 
     private Tutor buscarTutorPorEmailOuCpfEAtivoTrue(String emailOuCpf){
-        if(tutorRepository.findByEmailAndAtivoTrue(emailOuCpf) != null){
-            return tutorRepository.findByEmailAndAtivoTrue(emailOuCpf);
-        } else if(tutorRepository.findByCpfAndAtivoTrue(emailOuCpf) != null) {
-            return tutorRepository.findByCpfAndAtivoTrue(emailOuCpf);
-        } else {
-            throw new RuntimeException(); //EntidadeNaoEncontradaException("Tutor")
-        }
-    }
+        Tutor tutor = tutorRepository.findByEmailAndAtivoTrue(emailOuCpf);
 
+        if (tutor == null) {
+            tutor = tutorRepository.findByCpfAndAtivoTrue(emailOuCpf);
+        }
+        if (tutor == null) {
+            throw new EntidadeNaoEncontradaException("Tutor");
+        }
+        if(!tutor.getAtivo()){
+            throw new AcessoNegadoException();
+        }
+        return tutor;
+    }
 }
+
+
