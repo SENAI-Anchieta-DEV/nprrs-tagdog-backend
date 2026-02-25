@@ -15,7 +15,4 @@ public interface TutorRepository extends JpaRepository<Tutor, String> {
     Tutor findByEmailAndAtivoTrue(String email);
     Tutor findByCpfAndAtivoTrue(String cpf);
 
-    boolean existsByEmail(@NotNull @NotBlank @Email String email);
-
-    boolean existsByCpf(@NotNull @NotBlank String cpf);
 }

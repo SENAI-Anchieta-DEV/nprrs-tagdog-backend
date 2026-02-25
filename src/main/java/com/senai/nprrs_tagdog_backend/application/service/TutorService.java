@@ -27,10 +27,10 @@ public class TutorService {
         if(dto.animais().isEmpty()){
             throw new RegraNegocioException("Tutor deve possuir ao menos um animal");
         }
-        if (tutorRepository.existsByEmail(dto.email())) {
+        if (tutorRepository.findByEmailAndAtivoTrue(dto.email()) != null) {
             throw new EntidadeDuplicadaException("Tutor com este email");
         }
-        if (tutorRepository.existsByCpf(dto.cpf())) {
+        if (tutorRepository.findByCpfAndAtivoTrue(dto.cpf())!=null) {
             throw new EntidadeDuplicadaException("Tutor com este CPF");
         }
 
@@ -95,7 +95,7 @@ public class TutorService {
         if (tutor == null) {
             throw new EntidadeNaoEncontradaException("Tutor");
         }
-        if(!tutor.getAtivo()){
+        if(!tutor.isAtivo()){
             throw new AcessoNegadoException();
         }
         return tutor;

@@ -13,4 +13,5 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @DiscriminatorValue("FUNCIONARIO")
 public class Funcionario extends Usuario{
+
 }
