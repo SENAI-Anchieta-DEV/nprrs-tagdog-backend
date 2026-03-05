@@ -21,16 +21,13 @@ public class AuthService {
     private final JwtService jwt;
 
     public String login(AuthDTO.LoginRequest req) {
-        Usuario usuario = usuarios.findByEmail(req.email())
+        Usuario usuario = usuarios.findByEmailAndAtivoTrue(req.email())
                 .orElseThrow(() ->  new EntidadeNaoEncontradaException("Usuário")); //EntidadeNaoEncontradaException("Usuário")
 
         if (!encoder.matches(req.senha(), usuario.getSenha())) {
             throw new DadosInvalidosException("Credenciais inválidas");
         }
 
-        if (!usuario.isAtivo()) {
-            throw new AcessoNegadoException();
-        }
         return jwt.generateToken(usuario.getEmail(), usuario.getRole().name());
     }
 }

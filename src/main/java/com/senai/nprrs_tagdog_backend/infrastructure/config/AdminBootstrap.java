@@ -36,6 +36,7 @@ public class AdminBootstrap implements CommandLineRunner {
                             .email(adminEmail)
                             .senha(passwordEncoder.encode(adminSenha))
                             .role(Role.ADMIN)
+                            .ativo(true)
                             .build();
                     usuarioRepository.save(admin);
                     System.out.println("Usuário admin provisório criado: " + adminEmail);
