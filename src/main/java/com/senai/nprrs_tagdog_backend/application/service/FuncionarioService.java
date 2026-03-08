@@ -21,7 +21,7 @@ public class FuncionarioService {
     private final PasswordEncoder passwordEncoder;
 
     public FuncionarioDTO.FuncionarioResponseDTO registrarFuncionario(FuncionarioDTO.FuncionarioRegistroDTO dto) {
-        if (funcionarioRepository.findByEmailAndAtivoTrue(dto.email()) != null) { //fiz um metodo no Repository funcionario
+        if (funcionarioRepository.findByEmailAndAtivoTrue(dto.email()).isPresent()) { //fiz um metodo no Repository funcionario
             throw new EntidadeDuplicadaException("Funcionário com este email");
         }
         Funcionario funcionario = dto.toEntity();

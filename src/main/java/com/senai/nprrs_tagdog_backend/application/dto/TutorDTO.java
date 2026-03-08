@@ -51,7 +51,7 @@ public class TutorDTO {
                             .map(AnimalDTO.AnimalRegistroDTO::toEntity)
                             .toList())
                     .ativo(true)
-                    .role(Role.FUNCIONARIO)
+                    .role(Role.TUTOR)
                     .build();
         }
     }
