@@ -22,7 +22,7 @@ public class AuthService {
 
     public String login(AuthDTO.LoginRequest req) {
         Usuario usuario = usuarios.findByEmailAndAtivoTrue(req.email())
-                .orElseThrow(() ->  new EntidadeNaoEncontradaException("Usuário")); //EntidadeNaoEncontradaException("Usuário")
+                .orElseThrow(() ->  new EntidadeNaoEncontradaException("Usuário"));
 
         if (!encoder.matches(req.senha(), usuario.getSenha())) {
             throw new DadosInvalidosException("Credenciais inválidas");
