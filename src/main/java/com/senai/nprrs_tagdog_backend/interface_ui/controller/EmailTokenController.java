@@ -38,4 +38,21 @@ public class EmailTokenController {
                 URI.create("/api/emailtoken/token/" + novoEmailToken.token())
         ).body(novoEmailToken);
     }
+
+    @Operation(
+            summary = "Validar um token para alterar senha",
+            description = "Realiza a validacao do token e altera a senha do usuario",
+            parameters = {
+                    @Parameter(name = "email", description = "email do usuario a ser buscado", example = "tutor@email.com"),
+                    @Parameter(name = "token", description = "token do usuario", example = "123456")
+            },
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Token validado com sucesso")
+            }
+    )
+    @PutMapping
+    public ResponseEntity<Void> validarEmailToken(@Valid @RequestBody SenhaDTO dto) {
+        emailTokenService.validarEmailToken(dto);
+        return ResponseEntity.noContent().build();
+    }
 }

@@ -64,4 +64,23 @@ public class EmailTokenService {
 
         mailSender.send(message);
     }
+
+    public void validarEmailToken(SenhaDTO dto) {
+        Usuario usuario = usuarioRepository.findByEmail(dto.email())
+                .orElseThrow(() -> new EntidadeNaoEncontradaException("Usuário"));
+
+        EmailToken emailToken = emailTokenRepository.findByUsuario(usuario);
+
+        if (emailToken.getToken() != dto.token()) {
+            throw new RegraNegocioException("EmailToken inválido");
+        }
+
+        if (emailToken.getDataExpirado().isBefore(LocalDateTime.now())) {
+            throw new RegraNegocioException("Data do EmailToken expirada");
+        }
+
+        usuario.setSenha(passwordEncoder.encode(dto.senha()));
+        usuarioRepository.save(usuario);
+        emailTokenRepository.delete(emailToken);
+    }
 }
