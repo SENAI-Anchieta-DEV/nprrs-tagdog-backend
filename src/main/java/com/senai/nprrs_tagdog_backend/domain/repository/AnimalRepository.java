@@ -7,9 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface AnimalRepository extends JpaRepository<Animal, String> {
-
     Optional<Animal> findByMatriculaAndAtivoTrue(String matricula);
-
     List<Animal> findAllByAtivoTrue();
-
+    boolean existsByMatricula(String matricula);
 }

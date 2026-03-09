@@ -8,42 +8,33 @@ import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 public class AnimalDTO {
-
     public record AnimalRegistroDTO(
-
-            @NotBlank
-            @Schema(description = "Matricula do animal", example = "C12")
-            String matricula,
-
             @NotBlank
             @Schema(description = "Nome do animal", example = "Bob")
             String nome,
-
+            
             @NotBlank
             @Schema(description = "Raça do animal", example = "Golden Retriever")
             String raca,
-
+            
             @NotNull
             @Schema(description = "Sexo do animal", example = "MACHO")
             SexoAnimal sexo,
-
+            
             @NotNull
             @Schema(description = "Porte do animal", example = "GRANDE")
             PorteAnimal porte,
-
+            
             @NotNull
             @Schema(description = "Data de nascimento do animal", example = "2026-02-19")
             LocalDate dataNascimento,
-
+            
             @NotBlank
             @Schema(description = "Descrição do animal", example = "Alergia a chocolate")
             String descricao
-
     ) {
-
         public Animal toEntity() {
             return Animal.builder()
-                    .matricula(this.matricula)
                     .nome(this.nome)
                     .raca(this.raca)
                     .sexo(this.sexo)
@@ -56,7 +47,6 @@ public class AnimalDTO {
     }
 
     public record AnimalResponseDTO(
-
             @Schema(description = "Matricula do animal")
             String matricula,
 
@@ -84,7 +74,6 @@ public class AnimalDTO {
             @Schema(description = "Animal ativo ou não")
             boolean ativo
     ) {
-
         public static AnimalResponseDTO fromEntity(Animal animal) {
             return new AnimalResponseDTO(
                     animal.getMatricula(),

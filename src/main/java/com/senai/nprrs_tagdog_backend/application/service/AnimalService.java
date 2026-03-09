@@ -4,6 +4,7 @@ import com.senai.nprrs_tagdog_backend.application.dto.AnimalDTO;
 import com.senai.nprrs_tagdog_backend.domain.entity.Animal;
 import com.senai.nprrs_tagdog_backend.domain.repository.AnimalRepository;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,6 +19,12 @@ public class AnimalService {
     public AnimalDTO.AnimalResponseDTO registrar(AnimalDTO.AnimalRegistroDTO dto) {
 
         Animal animal = dto.toEntity();
+
+        String novaMatricula;
+        do {
+            novaMatricula = RandomStringUtils.randomNumeric(5);
+        } while (repository.existsByMatricula(novaMatricula) == true);
+        animal.setMatricula("TD-" + novaMatricula);
 
         repository.save(animal);
 
