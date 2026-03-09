@@ -15,11 +15,6 @@ public class AnimalDTO {
     public record AnimalRegistroDTO(
             @NotNull
             @NotBlank
-            @Schema(description = "Matricula do animal", example = "C12")
-            String matricula,
-            @NotNull
-            @NotBlank
-            @Email
             @Schema(description = "Nome do animal", example = "Bob")
             String nome,
             @NotNull
@@ -27,15 +22,12 @@ public class AnimalDTO {
             @Schema(description = "Raca do animal", example = "Golden Retriever")
             String raca,
             @NotNull
-            @NotBlank
             @Schema(description = "Sexo do animal", example = "MACHO")
             SexoAnimal sexo,
             @NotNull
-            @NotBlank
             @Schema(description = "Porte do animal", example = "GRANDE")
             PorteAnimal porte,
             @NotNull
-            @NotBlank
             @Schema(description = "Data de nascimento do animal", example = "2026-02-19")
             LocalDate dataNascimento,
             @NotNull
@@ -45,7 +37,6 @@ public class AnimalDTO {
     ) {
         public Animal toEntity() {
             return Animal.builder()
-                    .matricula(this.matricula)
                     .nome(this.nome)
                     .raca(this.raca)
                     .sexo(this.sexo)

@@ -1,6 +1,7 @@
 package com.senai.nprrs_tagdog_backend.application.service;
 
 import com.senai.nprrs_tagdog_backend.application.dto.TutorDTO;
+import com.senai.nprrs_tagdog_backend.domain.entity.Animal;
 import com.senai.nprrs_tagdog_backend.domain.entity.Endereco;
 import com.senai.nprrs_tagdog_backend.domain.entity.Tutor;
 import com.senai.nprrs_tagdog_backend.domain.exceptions.*;
@@ -8,6 +9,7 @@ import com.senai.nprrs_tagdog_backend.domain.repository.AnimalRepository;
 import com.senai.nprrs_tagdog_backend.domain.repository.EnderecoRepository;
 import com.senai.nprrs_tagdog_backend.domain.repository.TutorRepository;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,7 +26,7 @@ public class TutorService {
     private final PasswordEncoder passwordEncoder;
 
     public TutorDTO.TutorResponseDTO registrarTutor(TutorDTO.TutorRegistroDTO dto) {
-        if(dto.animais().isEmpty()){
+        if(dto.animal() == null){
             throw new RegraNegocioException("Tutor deve possuir ao menos um animal");
         }
         if (tutorRepository.findByEmailAndAtivoTrue(dto.email()) != null) {
@@ -36,6 +38,17 @@ public class TutorService {
 
         Tutor tutor = dto.toEntity();
         tutor.setSenha(passwordEncoder.encode(dto.senha()));
+
+        Animal animal = dto.animal().toEntity();
+
+        String novaMatricula;
+        do {
+            novaMatricula = RandomStringUtils.randomNumeric(8);
+        } while (animalRepository.existsByMatricula(novaMatricula) == true);
+
+        animal.setMatricula(novaMatricula);
+        tutor.getAnimais().add(animal);
+
         tutorRepository.save(tutor);
 
         if (tutor.getAnimais().isEmpty()) {

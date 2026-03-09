@@ -43,26 +43,14 @@ public class TutorController {
                                                 "numero": "11",
                                                 "complemento": "Apartamento"
                                              },
-                                             "animais": [
-                                                {
-                                                    "matricula": "C12",
-                                                    "nome": "Bob",
-                                                    "raca": "Golden Retriever",
-                                                    "sexo": "MACHO",
-                                                    "porte": "GRANDE",
-                                                    "dataNascimento": "2026-02-19",
-                                                    "descricao": "Alergia a chocolate"
-                                                },
-                                                {
-                                                    "matricula": "C13",
-                                                    "nome": "Bob 2",
-                                                    "raca": "Golden Retriever",
-                                                    "sexo": "MACHO",
-                                                    "porte": "GRANDE",
-                                                    "dataNascimento": "2026-02-19",
-                                                    "descricao": "Alergia a chocolate"
-                                                }
-                                             ]
+                                             "animal": {
+                                                 "nome": "Bob",
+                                                 "raca": "Golden Retriever",
+                                                 "sexo": "MACHO",
+                                                 "porte": "GRANDE",
+                                                 "dataNascimento": "2026-02-19",
+                                                 "descricao": "Alergia a chocolate"
+                                               }
                                          }
                                     """
                             )

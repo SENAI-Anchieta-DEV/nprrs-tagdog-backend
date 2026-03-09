@@ -1,5 +1,6 @@
 package com.senai.nprrs_tagdog_backend.application.dto;
 
+import com.senai.nprrs_tagdog_backend.domain.entity.Animal;
 import com.senai.nprrs_tagdog_backend.domain.entity.Role;
 import com.senai.nprrs_tagdog_backend.domain.entity.Tutor;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -7,6 +8,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TutorDTO {
@@ -36,8 +38,8 @@ public class TutorDTO {
             @Schema(description = "Endereco do tutor")
             EnderecoDTO.EnderecoRegistroDTO endereco,
             @NotNull
-            @Schema(description = "Lista de animais do tutor")
-            List<AnimalDTO.AnimalRegistroDTO> animais
+            @Schema(description = "Animail do tutor")
+            AnimalDTO.AnimalRegistroDTO animal
     ) {
         public Tutor toEntity() {
             return Tutor.builder()
@@ -47,9 +49,7 @@ public class TutorDTO {
                     .cpf(this.cpf)
                     .telefone(this.telefone)
                     .endereco(this.endereco.toEntity())
-                    .animais(this.animais.stream()
-                            .map(AnimalDTO.AnimalRegistroDTO::toEntity)
-                            .toList())
+                    .animais(new ArrayList<Animal>())
                     .ativo(true)
                     .role(Role.TUTOR)
                     .build();
