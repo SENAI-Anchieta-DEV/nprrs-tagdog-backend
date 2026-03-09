@@ -69,7 +69,7 @@ public class FuncionarioController {
             summary = "Buscar um funcionario ativo pelo email",
             description = "Retorna um funcionario cadastrado",
             parameters = {
-                    @Parameter(name = "cpf", description = "email do funcionario a ser buscado", example = "funcionario@email.com")
+                    @Parameter(name = "email", description = "email do funcionario a ser buscado", example = "funcionario@email.com")
             },
             responses = {
                     @ApiResponse(responseCode = "200", description = "Funcionario retornado com sucesso"),
