@@ -20,6 +20,15 @@ public class Endereco {
     private String cep;
 
     @Column(nullable = false)
+    private String rua;
+
+    @Column(nullable = false)
+    private String bairro;
+
+    @Column(nullable = false)
+    private String cidade;
+
+    @Column(nullable = false)
     private String numero;
 
     @Column(nullable = false)

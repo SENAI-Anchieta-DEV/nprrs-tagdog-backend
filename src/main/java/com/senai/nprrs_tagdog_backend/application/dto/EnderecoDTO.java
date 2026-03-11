@@ -15,6 +15,18 @@ public class EnderecoDTO {
             String cep,
             @NotNull
             @NotBlank
+            @Schema(description = "Rua", example = "Rua Gandavo")
+            String rua,
+            @NotNull
+            @NotBlank
+            @Schema(description = "Bairro", example = "Vila Mariana")
+            String bairro,
+            @NotNull
+            @NotBlank
+            @Schema(description = "Cidade", example = "São Paulo")
+            String cidade,
+            @NotNull
+            @NotBlank
             @Schema(description = "Numero do endereco", example = "00")
             String numero,
             @NotNull
@@ -25,6 +37,9 @@ public class EnderecoDTO {
         public Endereco toEntity() {
             return Endereco.builder()
                     .cep(this.cep)
+                    .rua(this.rua)
+                    .bairro(this.bairro)
+                    .cidade(this.cidade)
                     .numero(this.numero)
                     .complemento(this.complemento)
                     .build();
@@ -33,6 +48,12 @@ public class EnderecoDTO {
     public record EnderecoResponseDTO(
             @Schema(description = "Cep do tutor")
             String cep,
+            @Schema(description = "Rua")
+            String rua,
+            @Schema(description = "Bairro")
+            String bairro,
+            @Schema(description = "Cidade")
+            String cidade,
             @Schema(description = "Numero do endereco")
             String numero,
             @Schema(description = "Complemento do endereco")
@@ -41,6 +62,9 @@ public class EnderecoDTO {
         public static EnderecoResponseDTO fromEntity(Endereco endereco) {
             return new EnderecoResponseDTO(
                     endereco.getCep(),
+                    endereco.getRua(),
+                    endereco.getBairro(),
+                    endereco.getCidade(),
                     endereco.getNumero(),
                     endereco.getComplemento()
             );
