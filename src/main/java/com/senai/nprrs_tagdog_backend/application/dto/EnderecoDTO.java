@@ -27,6 +27,10 @@ public class EnderecoDTO {
             String cidade,
             @NotNull
             @NotBlank
+            @Schema(description = "Estado", example = "São Paulo")
+            String estado,
+            @NotNull
+            @NotBlank
             @Schema(description = "Numero do endereco", example = "00")
             String numero,
             @NotNull
@@ -40,6 +44,7 @@ public class EnderecoDTO {
                     .rua(this.rua)
                     .bairro(this.bairro)
                     .cidade(this.cidade)
+                    .estado(this.estado)
                     .numero(this.numero)
                     .complemento(this.complemento)
                     .build();
@@ -54,6 +59,8 @@ public class EnderecoDTO {
             String bairro,
             @Schema(description = "Cidade")
             String cidade,
+            @Schema(description = "Estado")
+            String estado,
             @Schema(description = "Numero do endereco")
             String numero,
             @Schema(description = "Complemento do endereco")
@@ -65,6 +72,7 @@ public class EnderecoDTO {
                     endereco.getRua(),
                     endereco.getBairro(),
                     endereco.getCidade(),
+                    endereco.getEstado(),
                     endereco.getNumero(),
                     endereco.getComplemento()
             );

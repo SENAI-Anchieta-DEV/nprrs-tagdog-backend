@@ -43,6 +43,7 @@ public class TutorController {
                                                 "rua": "Rua Gandavo",
                                                 "bairro": "Vila Mariana",
                                                 "cidade": "São Paulo",
+                                                "estado": "São Paulo",
                                                 "numero": "11",
                                                 "complemento": "Apartamento"
                                              },
@@ -128,6 +129,7 @@ public class TutorController {
                                                 "rua": "Rua Gandavo",
                                                 "bairro": "Vila Mariana",
                                                 "cidade": "São Paulo",
+                                                "estado": "São Paulo",
                                                 "numero": "11",
                                                 "complemento": "Apartamento"
                                              }

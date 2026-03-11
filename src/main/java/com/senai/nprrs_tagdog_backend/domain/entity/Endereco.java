@@ -29,6 +29,9 @@ public class Endereco {
     private String cidade;
 
     @Column(nullable = false)
+    private String estado;
+
+    @Column(nullable = false)
     private String numero;
 
     @Column(nullable = false)
