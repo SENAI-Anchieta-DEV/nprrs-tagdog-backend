@@ -1,6 +1,7 @@
 package com.senai.nprrs_tagdog_backend.application.dto;
 
 import com.senai.nprrs_tagdog_backend.domain.entity.*;
+import com.senai.nprrs_tagdog_backend.domain.repository.AnimalRepository;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -50,6 +51,9 @@ public class AnimalDTO {
             @Schema(description = "Matricula do animal")
             String matricula,
 
+            @Schema(description = "Tutor do animal")
+            TutorDTO.TutorResponseDadosPrincipaisDTO tutor,
+
             @Schema(description = "Nome do animal")
             String nome,
 
@@ -74,9 +78,10 @@ public class AnimalDTO {
             @Schema(description = "Animal ativo ou não")
             boolean ativo
     ) {
-        public static AnimalResponseDTO fromEntity(Animal animal) {
+        public static AnimalResponseDTO fromEntity(Animal animal, Tutor tutor) {
             return new AnimalResponseDTO(
                     animal.getMatricula(),
+                    TutorDTO.TutorResponseDadosPrincipaisDTO.fromEntity(tutor),
                     animal.getNome(),
                     animal.getRaca(),
                     animal.getSexo(),

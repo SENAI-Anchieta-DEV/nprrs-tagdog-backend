@@ -29,10 +29,10 @@ public class TutorService {
         if(dto.animal() == null){
             throw new RegraNegocioException("Tutor deve possuir ao menos um animal");
         }
-        if (tutorRepository.findByEmailAndAtivoTrue(dto.email()) != null) {
+        if (tutorRepository.findByEmail(dto.email()) != null) {
             throw new EntidadeDuplicadaException("Tutor com este email");
         }
-        if (tutorRepository.findByCpfAndAtivoTrue(dto.cpf())!=null) {
+        if (tutorRepository.findByCpf(dto.cpf())!=null) {
             throw new EntidadeDuplicadaException("Tutor com este CPF");
         }
 
@@ -66,19 +66,19 @@ public class TutorService {
 
     @Transactional(readOnly = true)
     public List<TutorDTO.TutorResponseDTO> listarTutoresAtivos() {
-        return tutorRepository.findAllByAtivoTrue()
+        return tutorRepository.findAll()
                 .stream()
                 .map(TutorDTO.TutorResponseDTO::fromEntity)
                 .toList();
     }
 
     @Transactional(readOnly = true)
-    public TutorDTO.TutorResponseDTO buscarTutorAtivoPorEmailOuCpf(String emailOuCpf) {
-        return TutorDTO.TutorResponseDTO.fromEntity(buscarTutorPorEmailOuCpfEAtivoTrue(emailOuCpf));
+    public TutorDTO.TutorResponseDTO buscarTutorPorEmailOuCpf(String emailOuCpf) {
+        return TutorDTO.TutorResponseDTO.fromEntity(buscaDeTutorPorEmailOuCpf(emailOuCpf));
     }
 
     public TutorDTO.TutorResponseDTO atualizarTutor(String emailOuCpf, TutorDTO.TutorAtualizacaoDTO dto) {
-        Tutor tutor = buscarTutorPorEmailOuCpfEAtivoTrue(emailOuCpf);
+        Tutor tutor = buscaDeTutorPorEmailOuCpf(emailOuCpf);
 
         tutor.setNome(dto.nome());
         tutor.setEmail(dto.email());
@@ -93,25 +93,25 @@ public class TutorService {
     }
 
     public void desativarTutor(String emailOuCpf) {
-        Tutor tutor = buscarTutorPorEmailOuCpfEAtivoTrue(emailOuCpf);
+        Tutor tutor = buscaDeTutorPorEmailOuCpf(emailOuCpf);
 
-        tutor.setAtivo(false);
-        tutorRepository.save(tutor);
+        if (tutor.isAtivo()){
+            tutor.setAtivo(false);
+            tutorRepository.save(tutor);
+        } else {
+            throw new ConflitosDeEstadoException("Tutor já está desativado");
+        }
+
     }
 
-    private Tutor buscarTutorPorEmailOuCpfEAtivoTrue(String emailOuCpf){
-        Tutor tutor = tutorRepository.findByEmailAndAtivoTrue(emailOuCpf);
-
-        if (tutor == null) {
-            tutor = tutorRepository.findByCpfAndAtivoTrue(emailOuCpf);
-        }
-        if (tutor == null) {
+    private Tutor buscaDeTutorPorEmailOuCpf(String emailOuCpf){
+        if(tutorRepository.findByEmail(emailOuCpf) != null){
+            return tutorRepository.findByEmail(emailOuCpf);
+        } else if(tutorRepository.findByCpf(emailOuCpf) != null) {
+            return tutorRepository.findByCpf(emailOuCpf);
+        } else {
             throw new EntidadeNaoEncontradaException("Tutor");
         }
-        if(!tutor.isAtivo()){
-            throw new AcessoNegadoException();
-        }
-        return tutor;
     }
 }
 

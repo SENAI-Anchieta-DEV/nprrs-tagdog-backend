@@ -85,7 +85,7 @@ public class TutorController {
     }
 
     @Operation(
-            summary = "Buscar um funcionario ativo pelo email ou cpf",
+            summary = "Buscar um funcionario pelo email ou cpf",
             description = "Retorna um funcionario cadastrado",
             parameters = {
                     @Parameter(name = "emailOuCpf", description = "email ou cpf do funcionario a ser buscado", example = "tutor@email.com")
@@ -103,12 +103,12 @@ public class TutorController {
             }
     )
     @GetMapping("/emailOuCpf/{emailOuCpf}")
-    public ResponseEntity<TutorDTO.TutorResponseDTO> buscarTutorAtivoPorEmailOuCpf(@PathVariable String emailOuCpf) {
-        return ResponseEntity.ok(tutorService.buscarTutorAtivoPorEmailOuCpf(emailOuCpf));
+    public ResponseEntity<TutorDTO.TutorResponseDTO> buscarTutorPorEmailOuCpf(@PathVariable String emailOuCpf) {
+        return ResponseEntity.ok(tutorService.buscarTutorPorEmailOuCpf(emailOuCpf));
     }
 
     @Operation(
-            summary = "Atualizar um tutor ativo pelo email ou cpf",
+            summary = "Atualizar um tutor pelo email ou cpf",
             description = "Realiza a atualização do tutor",
             parameters = {
                     @Parameter(name = "emailOuCpf", description = "email ou cpf do tutor a ser atualizado", example = "tutor@email.com")

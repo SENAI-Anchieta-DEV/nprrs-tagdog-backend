@@ -27,11 +27,11 @@ public class AnimalController {
             description = "Realiza o cadastro de um animal"
     )
     @ApiResponse(responseCode = "201", description = "Animal cadastrado com sucesso")
-    @PostMapping
+    @PostMapping("/emailOuCpfTutor/{emailOuCpfTutor}")
     public ResponseEntity<AnimalDTO.AnimalResponseDTO> criar(
-            @Valid @RequestBody AnimalDTO.AnimalRegistroDTO dto) {
+            @Valid @RequestBody AnimalDTO.AnimalRegistroDTO dto, @PathVariable String emailOuCpfTutor) {
 
-        AnimalDTO.AnimalResponseDTO animal = service.registrar(dto);
+        AnimalDTO.AnimalResponseDTO animal = service.registrar(dto, emailOuCpfTutor);
 
         return ResponseEntity.created(
                 URI.create("/api/animais/matricula/" + animal.matricula())

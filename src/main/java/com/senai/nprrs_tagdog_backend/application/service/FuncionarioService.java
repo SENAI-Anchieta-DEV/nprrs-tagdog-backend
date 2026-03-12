@@ -21,7 +21,7 @@ public class FuncionarioService {
     private final PasswordEncoder passwordEncoder;
 
     public FuncionarioDTO.FuncionarioResponseDTO registrarFuncionario(FuncionarioDTO.FuncionarioRegistroDTO dto) {
-        if (funcionarioRepository.findByEmailAndAtivoTrue(dto.email()).isPresent()) { //fiz um metodo no Repository funcionario
+        if (funcionarioRepository.findByEmail(dto.email()).isPresent()) { //fiz um metodo no Repository funcionario
             throw new EntidadeDuplicadaException("Funcionário com este email");
         }
         Funcionario funcionario = dto.toEntity();
@@ -31,7 +31,7 @@ public class FuncionarioService {
 
     @Transactional(readOnly = true)
     public List<FuncionarioDTO.FuncionarioResponseDTO> listarFuncionariosAtivos() {
-        return funcionarioRepository.findAllByAtivoTrue()
+        return funcionarioRepository.findAll()
                 .stream()
                 .map(FuncionarioDTO.FuncionarioResponseDTO::fromEntity)
                 .toList();
@@ -39,11 +39,11 @@ public class FuncionarioService {
 
     @Transactional(readOnly = true)
     public FuncionarioDTO.FuncionarioResponseDTO buscarFuncionarioAtivoPorEmail(String email) {
-        return FuncionarioDTO.FuncionarioResponseDTO.fromEntity(buscarFuncionarioPorEmailEAtivoTrue(email));
+        return FuncionarioDTO.FuncionarioResponseDTO.fromEntity(buscarFuncionarioPorEmail(email));
     }
 
     public FuncionarioDTO.FuncionarioResponseDTO atualizarFuncionario(String email, FuncionarioDTO.FuncionarioRegistroDTO dto) {
-        Funcionario funcionario = buscarFuncionarioPorEmailEAtivoTrue(email);
+        Funcionario funcionario = buscarFuncionarioPorEmail(email);
 
         funcionario.setNome(dto.nome());
         funcionario.setEmail(dto.email());
@@ -52,7 +52,7 @@ public class FuncionarioService {
     }
 
     public void desativarFuncionario(String email) {
-        Funcionario funcionario = buscarFuncionarioPorEmailEAtivoTrue(email);
+        Funcionario funcionario = buscarFuncionarioPorEmail(email);
 
         if (!funcionario.isAtivo()) {
             throw new ConflitosDeEstadoException("Funcionário já está desativado.");
@@ -61,8 +61,8 @@ public class FuncionarioService {
         funcionarioRepository.save(funcionario);
     }
 
-    private Funcionario buscarFuncionarioPorEmailEAtivoTrue(String email){
-        return funcionarioRepository.findByEmailAndAtivoTrue(email).orElseThrow(
+    private Funcionario buscarFuncionarioPorEmail(String email){
+        return funcionarioRepository.findByEmail(email).orElseThrow(
                 () -> new EntidadeNaoEncontradaException("Funcionário"));
     }
 }
