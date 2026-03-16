@@ -121,7 +121,6 @@ public class TutorController {
                                         {
                                              "nome": "Nome",
                                              "email": "tutor@email.com",
-                                             "senha": "senha",
                                              "cpf": "111.111.111-11",
                                              "telefone": "(11) 11111-1111",
                                              "endereco": {

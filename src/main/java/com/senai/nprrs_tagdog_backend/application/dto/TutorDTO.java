@@ -67,10 +67,6 @@ public class TutorDTO {
             String email,
             @NotNull
             @NotBlank
-            @Schema(description = "Senha do tutor", example = "123")
-            String senha,
-            @NotNull
-            @NotBlank
             @Schema(description = "Cpf do tutor", example = "111.111.111-11")
             String cpf,
             @NotNull
