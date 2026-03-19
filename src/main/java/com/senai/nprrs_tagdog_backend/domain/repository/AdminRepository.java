@@ -9,7 +9,5 @@ import java.util.Optional;
 public interface AdminRepository extends JpaRepository<Admin, String> {
     List<Admin> findAllByAtivoTrue();
     Optional<Admin>findByEmailAndAtivoTrue(String email);
-    Optional<Admin>findByCpflAndAtivoTrue(String cpf);
-
 
 }

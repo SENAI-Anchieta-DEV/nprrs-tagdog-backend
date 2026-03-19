@@ -20,7 +20,7 @@ public class FuncionarioDTO {
             String email,
             @NotNull
             @NotBlank
-            @Schema(description = "Senha do funcionario", example = "123")
+            @Schema(description = "Senha do funcionario", example = "1234")
             String senha
     ) {
         public Funcionario toEntity() {
