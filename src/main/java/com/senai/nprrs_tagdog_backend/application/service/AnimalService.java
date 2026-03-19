@@ -76,6 +76,7 @@ public class AnimalService {
                 .orElseThrow(() -> new RuntimeException("Animal não encontrado"));
         Tutor tutor = tutorRepository.findByAnimais(animal);
 
+        animal.setImagem(dto.imagem());
         animal.setNome(dto.nome());
         animal.setRaca(dto.raca());
         animal.setSexo(dto.sexo());
@@ -98,7 +99,8 @@ public class AnimalService {
             animal.setAtivo(false);
             repository.save(animal);
         } else {
-            throw new ConflitosDeEstadoException("Animal já está desativado");
+            animal.setAtivo(true);
+            repository.save(animal);
         }
 
         repository.save(animal);

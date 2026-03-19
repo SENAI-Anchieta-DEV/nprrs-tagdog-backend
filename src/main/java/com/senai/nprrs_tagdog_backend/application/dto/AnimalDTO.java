@@ -10,6 +10,9 @@ import java.time.LocalDate;
 
 public class AnimalDTO {
     public record AnimalRegistroDTO(
+            @Schema(description = "Imagem do animal")
+            String imagem,
+
             @NotBlank
             @Schema(description = "Nome do animal", example = "Bob")
             String nome,
@@ -36,6 +39,7 @@ public class AnimalDTO {
     ) {
         public Animal toEntity() {
             return Animal.builder()
+                    .imagem(this.imagem)
                     .nome(this.nome)
                     .raca(this.raca)
                     .sexo(this.sexo)
@@ -48,6 +52,9 @@ public class AnimalDTO {
     }
 
     public record AnimalResponseDTO(
+            @Schema(description = "Imagem do animal")
+            String imagem,
+
             @Schema(description = "Matricula do animal")
             String matricula,
 
@@ -80,6 +87,7 @@ public class AnimalDTO {
     ) {
         public static AnimalResponseDTO fromEntity(Animal animal, Tutor tutor) {
             return new AnimalResponseDTO(
+                    animal.getImagem(),
                     animal.getMatricula(),
                     TutorDTO.TutorResponseDadosPrincipaisDTO.fromEntity(tutor),
                     animal.getNome(),

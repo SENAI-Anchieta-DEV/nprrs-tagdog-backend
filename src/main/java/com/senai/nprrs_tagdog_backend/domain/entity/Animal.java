@@ -18,6 +18,9 @@ public class Animal{
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
+    @Column(columnDefinition = "TEXT")
+    private String imagem;
+
     @Column(nullable = false, unique = true)
     private String matricula;
 
