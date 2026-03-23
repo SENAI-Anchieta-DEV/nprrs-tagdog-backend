@@ -1,10 +1,14 @@
 package com.senai.nprrs_tagdog_backend.interface_ui.controller;
 
 import com.senai.nprrs_tagdog_backend.application.dto.EmailTokenDTO;
+import com.senai.nprrs_tagdog_backend.application.dto.FuncionarioDTO;
 import com.senai.nprrs_tagdog_backend.application.dto.SenhaDTO;
 import com.senai.nprrs_tagdog_backend.application.service.EmailTokenService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -42,10 +46,20 @@ public class EmailTokenController {
     @Operation(
             summary = "Validar um token para alterar senha",
             description = "Realiza a validacao do token e altera a senha do usuario",
-            parameters = {
-                    @Parameter(name = "email", description = "email do usuario a ser buscado", example = "tutor@email.com"),
-                    @Parameter(name = "token", description = "token do usuario", example = "123456")
-            },
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    required = true,
+                    content = @Content(
+                            schema = @Schema(implementation = SenhaDTO.class),
+                            examples = @ExampleObject(name = "Exemplo válido", value = """
+                                        {
+                                             "email": "tutor@email.com",
+                                             "token": "000000",
+                                             "senha": "senha1"
+                                         }
+                                    """
+                            )
+                    )
+            ),
             responses = {
                     @ApiResponse(responseCode = "200", description = "Token validado com sucesso")
             }

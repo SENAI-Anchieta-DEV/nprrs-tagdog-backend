@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.Random;
 
 @Service
@@ -57,7 +58,7 @@ public class EmailTokenService {
         message.setFrom("tag.dog.tcc@gmail.com");
         message.setTo(usuario.getEmail());
         message.setSubject("TagDog - Redefinir a sua senha com o token " + emailToken.getToken());
-        message.setText("Olá " + usuario.getNome() +
+        message.setText("Olá " + usuario.getEmail() +
                 "\n\nPara redefinir a sua senha use o token: "
                 + "\n\n" + emailToken.getToken()
                 + "\n\nO token irá expirar em 1 dia.");
@@ -71,7 +72,7 @@ public class EmailTokenService {
 
         EmailToken emailToken = emailTokenRepository.findByUsuario(usuario);
 
-        if (emailToken.getToken() != dto.token()) {
+        if (!Objects.equals(emailToken.getToken(), dto.token())) {
             throw new RegraNegocioException("EmailToken inválido");
         }
 
