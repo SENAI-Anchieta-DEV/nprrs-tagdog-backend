@@ -59,6 +59,17 @@ public class AnimalService {
                 .toList();
     }
 
+    public List<AnimalDTO.AnimalResponseDTO> listarAnimaisSemFuncionario() {
+
+        return repository.findAnimaisSemFuncionario()
+                .stream()
+                .map(animal -> {
+                    Tutor tutor = tutorRepository.findByAnimais(animal);
+                    return AnimalDTO.AnimalResponseDTO.fromEntity(animal, tutor);
+                })
+                .toList();
+    }
+
     // BUSCAR POR MATRICULA
     public AnimalDTO.AnimalResponseDTO buscarPorMatricula(String matricula) {
 

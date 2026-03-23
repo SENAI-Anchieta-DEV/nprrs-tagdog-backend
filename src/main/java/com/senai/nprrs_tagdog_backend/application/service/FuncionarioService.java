@@ -1,9 +1,11 @@
 package com.senai.nprrs_tagdog_backend.application.service;
 
 import com.senai.nprrs_tagdog_backend.application.dto.FuncionarioDTO;
+import com.senai.nprrs_tagdog_backend.domain.entity.Animal;
 import com.senai.nprrs_tagdog_backend.domain.entity.Funcionario;
 import com.senai.nprrs_tagdog_backend.domain.exceptions.ConflitosDeEstadoException;
 import com.senai.nprrs_tagdog_backend.domain.exceptions.EntidadeDuplicadaException;
+import com.senai.nprrs_tagdog_backend.domain.repository.AnimalRepository;
 import com.senai.nprrs_tagdog_backend.domain.repository.FuncionarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,6 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FuncionarioService {
     private final FuncionarioRepository funcionarioRepository;
+    private final AnimalRepository animalRepository;
     private final PasswordEncoder passwordEncoder;
 
     public FuncionarioDTO.FuncionarioResponseDTO registrarFuncionario(FuncionarioDTO.FuncionarioRegistroDTO dto) {
@@ -26,6 +29,19 @@ public class FuncionarioService {
         }
         Funcionario funcionario = dto.toEntity();
         funcionario.setSenha(passwordEncoder.encode(dto.senha()));
+        return FuncionarioDTO.FuncionarioResponseDTO.fromEntity(funcionarioRepository.save(funcionario));
+    }
+
+    public FuncionarioDTO.FuncionarioResponseDTO adicionarAnimalNoFuncionario(String email, String matriculaAnimal) {
+        Funcionario funcionario = buscarFuncionarioPorEmail(email);
+        Animal animal = animalRepository.findByMatricula(matriculaAnimal).orElseThrow(
+                () -> new EntidadeNaoEncontradaException("Animal"));
+        if(funcionario.getAnimais().contains(animal)){
+            funcionario.getAnimais().remove(animal);
+        } else {
+            funcionario.getAnimais().add(animal);
+        }
+
         return FuncionarioDTO.FuncionarioResponseDTO.fromEntity(funcionarioRepository.save(funcionario));
     }
 

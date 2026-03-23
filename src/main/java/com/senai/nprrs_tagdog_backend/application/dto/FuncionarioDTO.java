@@ -7,6 +7,10 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
 public class FuncionarioDTO {
     public record FuncionarioRegistroDTO(
             @NotNull
@@ -38,15 +42,23 @@ public class FuncionarioDTO {
             String nome,
             @Schema(description = "Email do funcionario")
             String email,
+            @Schema(description = "Animais no cuidado do funcionario")
+            List<AnimalDTO.AnimalResponseSemTutorDTO> animais,
             @Schema(description = "Senha do funcionario")
             boolean ativo,
             @Schema(description = "Role")
             Role role
     ) {
         public static FuncionarioResponseDTO fromEntity(Funcionario funcionario) {
+            List<AnimalDTO.AnimalResponseSemTutorDTO> animais = Optional.ofNullable(funcionario.getAnimais())
+                    .orElse(Collections.emptyList())
+                    .stream()
+                    .map(AnimalDTO.AnimalResponseSemTutorDTO::fromEntity)
+                    .toList();
             return new FuncionarioResponseDTO(
                     funcionario.getNome(),
                     funcionario.getEmail(),
+                    animais,
                     funcionario.isAtivo(),
                     funcionario.getRole()
             );

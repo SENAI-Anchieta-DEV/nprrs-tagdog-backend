@@ -37,9 +37,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**", "/swagger-ui/**", "/v3/api-docs/**", "/h2-console/**").permitAll()
 
-                        .requestMatchers(HttpMethod.POST, "/api/funcionarios").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/funcionarios").hasAnyRole("ADMIN", "FUNCIONARIO")
                         .requestMatchers(HttpMethod.POST, "/api/tutores").hasAnyRole("ADMIN", "FUNCIONARIO")
-                        .requestMatchers(HttpMethod.GET, "/api/funcionarios/**", "/api/tutores/**").hasAnyRole("ADMIN", "FUNCIONARIO")
+                        .requestMatchers(HttpMethod.GET, "/api/funcionarios/**", "/api/tutores/**").hasAnyRole("ADMIN", "FUNCIONARIO", "TUTOR")
                         .requestMatchers(HttpMethod.PUT, "/api/funcionarios/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/tutores/**").hasAnyRole("ADMIN", "FUNCIONARIO")
                         .requestMatchers(HttpMethod.DELETE, "/api/funcionarios/**").hasRole("ADMIN")

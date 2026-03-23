@@ -26,5 +26,10 @@ public class Tutor extends Usuario{
     private Endereco endereco;
 
     @OneToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "tutor_animais",
+            joinColumns = @JoinColumn(name = "tutor_id"),
+            inverseJoinColumns = @JoinColumn(name = "animal_id")
+    )
     private List<Animal> animais;
 }

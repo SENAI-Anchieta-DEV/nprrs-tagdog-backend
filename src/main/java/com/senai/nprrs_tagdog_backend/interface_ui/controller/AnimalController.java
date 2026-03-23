@@ -44,8 +44,16 @@ public class AnimalController {
     )
     @GetMapping
     public ResponseEntity<List<AnimalDTO.AnimalResponseDTO>> listar() {
-
         return ResponseEntity.ok(service.listar());
+    }
+
+    @Operation(
+            summary = "Listar animais sem funcionario",
+            description = "Retorna todos os animais sem funcionario cadastrados"
+    )
+    @GetMapping("/animalSemFuncionario")
+    public ResponseEntity<List<AnimalDTO.AnimalResponseDTO>> listarAnimaisSemFuncionario() {
+        return ResponseEntity.ok(service.listarAnimaisSemFuncionario());
     }
 
     @Operation(

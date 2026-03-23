@@ -101,4 +101,51 @@ public class AnimalDTO {
             );
         }
     }
+
+    public record AnimalResponseSemTutorDTO(
+            @Schema(description = "Imagem do animal")
+            String imagem,
+
+            @Schema(description = "Matricula do animal")
+            String matricula,
+
+            @Schema(description = "Nome do animal")
+            String nome,
+
+            @Schema(description = "Raça do animal")
+            String raca,
+
+            @Schema(description = "Sexo do animal")
+            SexoAnimal sexo,
+
+            @Schema(description = "Porte do animal")
+            PorteAnimal porte,
+
+            @Schema(description = "Data de nascimento do animal")
+            LocalDate dataNascimento,
+
+            @Schema(description = "Descrição do animal")
+            String descricao,
+
+            @Schema(description = "Numero da tag do animal")
+            String numeroTag,
+
+            @Schema(description = "Animal ativo ou não")
+            boolean ativo
+    ) {
+        public static AnimalResponseSemTutorDTO fromEntity(Animal animal) {
+            return new AnimalResponseSemTutorDTO(
+                    animal.getImagem(),
+                    animal.getMatricula(),
+                    animal.getNome(),
+                    animal.getRaca(),
+                    animal.getSexo(),
+                    animal.getPorte(),
+                    animal.getDataNascimento(),
+                    animal.getDescricao(),
+                    animal.getNumeroTag(),
+                    animal.isAtivo()
+            );
+        }
+    }
 }
