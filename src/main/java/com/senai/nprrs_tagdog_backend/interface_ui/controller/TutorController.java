@@ -40,6 +40,9 @@ public class TutorController {
                                              "telefone": "(11) 11111-1111",
                                              "endereco": {
                                                 "cep": "111111-11",
+                                                "rua": "Rua Gandavo",
+                                                "bairro": "Vila Mariana",
+                                                "cidade": "São Paulo",
                                                 "numero": "11",
                                                 "complemento": "Apartamento"
                                              },
@@ -122,6 +125,9 @@ public class TutorController {
                                              "telefone": "(11) 11111-1111",
                                              "endereco": {
                                                 "cep": "111111-11",
+                                                "rua": "Rua Gandavo",
+                                                "bairro": "Vila Mariana",
+                                                "cidade": "São Paulo",
                                                 "numero": "11",
                                                 "complemento": "Apartamento"
                                              }

@@ -43,10 +43,10 @@ public class TutorService {
 
         String novaMatricula;
         do {
-            novaMatricula = RandomStringUtils.randomNumeric(8);
+            novaMatricula = RandomStringUtils.randomNumeric(5);
         } while (animalRepository.existsByMatricula(novaMatricula) == true);
 
-        animal.setMatricula(novaMatricula);
+        animal.setMatricula("TD-" + novaMatricula);
         tutor.getAnimais().add(animal);
 
         tutorRepository.save(tutor);
