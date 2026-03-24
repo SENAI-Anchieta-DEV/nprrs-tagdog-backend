@@ -67,10 +67,6 @@ public class TutorDTO {
             String email,
             @NotNull
             @NotBlank
-            @Schema(description = "Senha do tutor", example = "123")
-            String senha,
-            @NotNull
-            @NotBlank
             @Schema(description = "Cpf do tutor", example = "111.111.111-11")
             String cpf,
             @NotNull
@@ -103,7 +99,7 @@ public class TutorDTO {
     ) {
         public static TutorResponseDTO fromEntity(Tutor tutor) {
             List<AnimalDTO.AnimalResponseDTO> animais = tutor.getAnimais().stream()
-                    .map(AnimalDTO.AnimalResponseDTO::fromEntity)
+                    .map(animal -> AnimalDTO.AnimalResponseDTO.fromEntity(animal, tutor))
                     .toList();
             EnderecoDTO.EnderecoResponseDTO endereco = EnderecoDTO.EnderecoResponseDTO.fromEntity(tutor.getEndereco());
             return new TutorResponseDTO(
@@ -115,6 +111,31 @@ public class TutorDTO {
                     tutor.getTelefone(),
                     endereco,
                     animais
+            );
+        }
+    }
+    public record TutorResponseDadosPrincipaisDTO(
+            @Schema(description = "Nome do tutor")
+            String nome,
+            @Schema(description = "Email do tutor")
+            String email,
+            @Schema(description = "Usuario ativo ou nao")
+            boolean ativo,
+            @Schema(description = "Role")
+            Role role,
+            @Schema(description = "Cpf do tutor")
+            String cpf,
+            @Schema(description = "Telefone do tutor")
+            String telefone
+    ) {
+        public static TutorResponseDadosPrincipaisDTO fromEntity(Tutor tutor) {
+            return new TutorResponseDadosPrincipaisDTO(
+                    tutor.getNome(),
+                    tutor.getEmail(),
+                    tutor.isAtivo(),
+                    tutor.getRole(),
+                    tutor.getCpf(),
+                    tutor.getTelefone()
             );
         }
     }

@@ -54,6 +54,25 @@ public class FuncionarioController {
     }
 
     @Operation(
+            summary = "Adicionar um animal sob cuidade de um funcionario",
+            description = "Adiciona um animal no funcionario",
+            parameters = {
+                    @Parameter(name = "email", description = "email do funcionario a ser buscado", example = "funcionario@email.com"),
+                    @Parameter(name = "animalMatricula", description = "matricula do animal adicionado", example = "TD-12345")
+            },
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Cadastro realizado com sucesso")
+            }
+    )
+    @PostMapping("/email/{email}/animalMatricula/{animalMatricula}")
+    public ResponseEntity<FuncionarioDTO.FuncionarioResponseDTO> adicionarAnimalNoFuncionario(@PathVariable String email, @PathVariable String animalMatricula) {
+        FuncionarioDTO.FuncionarioResponseDTO novoFuncionario = funcionarioService.adicionarAnimalNoFuncionario(email, animalMatricula);
+        return ResponseEntity.created(
+                URI.create("/api/funcionarios/email/" + novoFuncionario.email())
+        ).body(novoFuncionario);
+    }
+
+    @Operation(
             summary = "Listar todos os funcionarios ativos",
             description = "Retorna todos os funcionarios cadastrados",
             responses = {

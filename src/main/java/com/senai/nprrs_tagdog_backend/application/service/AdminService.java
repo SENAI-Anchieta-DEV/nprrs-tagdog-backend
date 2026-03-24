@@ -21,7 +21,7 @@ public class AdminService {
     private final PasswordEncoder passwordEncoder;
 
     public AdminDTO.AdminResponseDTO registrarAdmin(AdminDTO.AdminRegistroDTO dto) {
-        if (adminRepository.findByEmailAndAtivoTrue(dto.email()).isPresent()) {
+        if (adminRepository.findByEmail(dto.email()).isPresent()) {
             throw new EntidadeDuplicadaException("Administrador com este e-mail");
         }
         Admin admin = dto.toEntity();
@@ -31,7 +31,7 @@ public class AdminService {
 
     @Transactional(readOnly = true)
     public List<AdminDTO.AdminResponseDTO> listarAdmiAtivos() {
-        return adminRepository.findAllByAtivoTrue()
+        return adminRepository.findAll()
                 .stream()
                 .map(AdminDTO.AdminResponseDTO::fromEntity)
                 .toList();
@@ -62,7 +62,7 @@ public class AdminService {
     }
 
     private Admin buscarAdminPorEmailEAtivoTrue(String email) {
-        return adminRepository.findByEmailAndAtivoTrue(email)
+        return adminRepository.findByEmail(email)
                 .orElseThrow(() -> new EntidadeNaoEncontradaException("Administrador não encontrado"));
     }
 }

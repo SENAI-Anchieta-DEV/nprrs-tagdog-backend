@@ -27,11 +27,11 @@ public class AnimalController {
             description = "Realiza o cadastro de um animal"
     )
     @ApiResponse(responseCode = "201", description = "Animal cadastrado com sucesso")
-    @PostMapping
+    @PostMapping("/emailOuCpfTutor/{emailOuCpfTutor}")
     public ResponseEntity<AnimalDTO.AnimalResponseDTO> criar(
-            @Valid @RequestBody AnimalDTO.AnimalRegistroDTO dto) {
+            @Valid @RequestBody AnimalDTO.AnimalRegistroDTO dto, @PathVariable String emailOuCpfTutor) {
 
-        AnimalDTO.AnimalResponseDTO animal = service.registrar(dto);
+        AnimalDTO.AnimalResponseDTO animal = service.registrar(dto, emailOuCpfTutor);
 
         return ResponseEntity.created(
                 URI.create("/api/animais/matricula/" + animal.matricula())
@@ -44,8 +44,16 @@ public class AnimalController {
     )
     @GetMapping
     public ResponseEntity<List<AnimalDTO.AnimalResponseDTO>> listar() {
-
         return ResponseEntity.ok(service.listar());
+    }
+
+    @Operation(
+            summary = "Listar animais sem funcionario",
+            description = "Retorna todos os animais sem funcionario cadastrados"
+    )
+    @GetMapping("/animalSemFuncionario")
+    public ResponseEntity<List<AnimalDTO.AnimalResponseDTO>> listarAnimaisSemFuncionario() {
+        return ResponseEntity.ok(service.listarAnimaisSemFuncionario());
     }
 
     @Operation(
