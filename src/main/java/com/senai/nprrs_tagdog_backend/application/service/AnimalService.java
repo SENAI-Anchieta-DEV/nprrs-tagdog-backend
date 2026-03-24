@@ -100,6 +100,18 @@ public class AnimalService {
         return AnimalDTO.AnimalResponseDTO.fromEntity(animal, tutor);
     }
 
+    public AnimalDTO.AnimalResponseDTO tag(String matricula, String tag) {
+
+        Animal animal = repository.findByMatricula(matricula)
+                .orElseThrow(() -> new RuntimeException("Animal não encontrado"));
+        Tutor tutor = tutorRepository.findByAnimais(animal);
+
+        animal.setNumeroTag(tag);
+        repository.save(animal);
+
+        return AnimalDTO.AnimalResponseDTO.fromEntity(animal, tutor);
+    }
+
     // SOFT DELETE
     public void deletar(String matricula) {
 

@@ -10,7 +10,6 @@ public class EnderecoDTO {
     public record EnderecoRegistroDTO(
             @NotNull
             @NotBlank
-            @Email
             @Schema(description = "Cep do tutor", example = "000000-00")
             String cep,
             @NotNull

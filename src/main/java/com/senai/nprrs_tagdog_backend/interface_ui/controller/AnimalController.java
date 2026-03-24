@@ -81,6 +81,18 @@ public class AnimalController {
     }
 
     @Operation(
+            summary = "Adicionar ou atualizar tag do animal",
+            description = "Adicionar ou atualizar tag do animal pela matrícula"
+    )
+    @PutMapping("/matricula/{matricula}/tag/{tag}")
+    public ResponseEntity<AnimalDTO.AnimalResponseDTO> atualizar(
+            @PathVariable String matricula,
+            @PathVariable String tag) {
+
+        return ResponseEntity.ok(service.tag(matricula, tag));
+    }
+
+    @Operation(
             summary = "Desativar animal",
             description = "Realiza o soft delete do animal"
     )

@@ -14,4 +14,6 @@ public interface AnimalRepository extends JpaRepository<Animal, String> {
 
     @Query("SELECT a FROM Animal a WHERE a.id NOT IN (SELECT anim.id FROM Funcionario f JOIN f.animais anim)")
     List<Animal> findAnimaisSemFuncionario();
+
+    Animal findByNumeroTag(String numeroTag);
 }
