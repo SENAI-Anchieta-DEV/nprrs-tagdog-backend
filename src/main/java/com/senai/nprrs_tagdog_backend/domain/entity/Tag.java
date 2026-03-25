@@ -19,7 +19,7 @@ public class Tag {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String numero;
 
     @Column(nullable = false)
