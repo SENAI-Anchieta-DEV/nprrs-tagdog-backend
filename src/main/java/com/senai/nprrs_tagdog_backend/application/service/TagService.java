@@ -20,15 +20,14 @@ public class TagService {
     public void salvar(TagDTO.TagRegistroDTO dto) {
         Animal animal = animalRepository.findByNumeroTag(dto.numero());
 
-        Tag tag = new Tag();
+        Tag tag = dto.toEntity();
         if(animal != null){
-            tag = dto.toEntity();
             tag.setAnimal(animal);
         }
 
-        if(tagRepository.findByNumero(dto.numero()) != null){
-
-        }
+//        if(tagRepository.findByNumero(dto.numero()) != null){
+//
+//        }
 
         tagRepository.save(tag);
     }

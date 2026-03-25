@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class TagDTO {
     public record TagRegistroDTO(
@@ -24,14 +25,16 @@ public class TagDTO {
             String longitude,
             @NotNull
             @Schema(description = "Data Criado", example = "2026-03-24T10:00:00")
-            LocalDateTime dataCriado
+            String dataCriado
     ) {
         public Tag toEntity() {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+
             return Tag.builder()
                     .numero(this.numero)
                     .latitude(this.latitude)
                     .longitude(this.longitude)
-                    .dataCriado(this.dataCriado)
+                    .dataCriado(LocalDateTime.parse(this.dataCriado, formatter))
                     .build();
         }
     }
