@@ -37,5 +37,8 @@ public class Tag {
     private LocalDateTime dataCriado;
 
     @Column(nullable = false)
+    private boolean saidaNaoAutorizada;
+
+    @Column(nullable = false)
     private boolean ativo;
 }

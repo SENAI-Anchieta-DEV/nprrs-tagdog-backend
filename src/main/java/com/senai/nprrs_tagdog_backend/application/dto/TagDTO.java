@@ -35,6 +35,7 @@ public class TagDTO {
                     .latitude(this.latitude)
                     .longitude(this.longitude)
                     .dataCriado(LocalDateTime.parse(this.dataCriado, formatter))
+                    .ativo(true)
                     .build();
         }
     }
@@ -49,6 +50,8 @@ public class TagDTO {
             Animal animal,
             @Schema(description = "Data Criado")
             LocalDateTime dataCriado,
+            @Schema(description = "Saida nao autorizada")
+            boolean saidaNaoAutorizada,
             @Schema(description = "Ativo")
             boolean ativo
     ) {
@@ -59,6 +62,7 @@ public class TagDTO {
                     tag.getLongitude(),
                     tag.getAnimal(),
                     tag.getDataCriado(),
+                    tag.isSaidaNaoAutorizada(),
                     tag.isAtivo()
             );
         }
