@@ -48,6 +48,7 @@ public class TutorController {
                                                 "complemento": "Apartamento"
                                              },
                                              "animal": {
+                                                 "imagem": "",
                                                  "nome": "Bob",
                                                  "raca": "Golden Retriever",
                                                  "sexo": "MACHO",
@@ -61,7 +62,17 @@ public class TutorController {
                     )
             ),
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Cadastro realizado com sucesso")
+                    @ApiResponse(responseCode = "201", description = "Cadastro realizado com sucesso"),
+                    @ApiResponse(
+                            responseCode = "409",
+                            description = "Entidade duplicada",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    examples = {
+                                            @ExampleObject(name = "Tutor com este e-mail", value = "\"Tutor com este e-mail\""),
+                                    }
+                            )
+                    ),
             }
     )
     @PostMapping

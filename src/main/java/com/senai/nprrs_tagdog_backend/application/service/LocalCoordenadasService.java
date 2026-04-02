@@ -6,10 +6,12 @@ import com.senai.nprrs_tagdog_backend.domain.exceptions.EntidadeNaoEncontradaExc
 import com.senai.nprrs_tagdog_backend.domain.exceptions.RegraNegocioException;
 import com.senai.nprrs_tagdog_backend.domain.repository.LocalCoordenadasRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Log4j2
 public class LocalCoordenadasService {
 
     private final LocalCoordenadasRepository localCoordenadasRepository;
@@ -19,11 +21,12 @@ public class LocalCoordenadasService {
             throw new RegraNegocioException("Coordenadas do local existe");
         }
 
+        log.info("Cadastrar Local com cep " +  dto.cep());
         return LocalCoordenadasDTO.fromEntity(localCoordenadasRepository.save(dto.toEntity()));
     }
 
     public LocalCoordenadasDTO buscar() {
-
+        log.info("Buscar Local");
         return LocalCoordenadasDTO.fromEntity(localCoordenadasRepository.findAll().stream().findFirst()
                 .orElseThrow(() -> new EntidadeNaoEncontradaException("Local Coordenadas")));
     }
@@ -32,6 +35,7 @@ public class LocalCoordenadasService {
         LocalCoordenadas localCoordenadas = localCoordenadasRepository.findByCep(cep)
                 .orElseThrow(() -> new EntidadeNaoEncontradaException("Local Coordenadas"));
 
+        log.info("Deletar Local com cep " + cep);
         localCoordenadasRepository.delete(localCoordenadas);
     }
 

@@ -6,17 +6,20 @@ import com.senai.nprrs_tagdog_backend.domain.exceptions.EntidadeNaoEncontradaExc
 import com.senai.nprrs_tagdog_backend.domain.exceptions.RegraNegocioException;
 import com.senai.nprrs_tagdog_backend.domain.repository.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
+@Log4j2
 public class TagService {
     private final AnimalRepository animalRepository;
     private final LocalCoordenadasRepository localCoordenadasRepository;
@@ -40,19 +43,19 @@ public class TagService {
             tag.setAtivo(true);
         }
 
-        // 1. Busca as coordenadas do local autorizado
+        // Busca as coordenadas do local autorizado
         LocalCoordenadas localCoordenadas = localCoordenadasRepository.findAll().stream().findFirst()
                 .orElseThrow(() -> new EntidadeNaoEncontradaException("Local Coordenadas"));
 
-        // 2. Define se a tag atual está fora do limite
+        // Define se a tag atual está fora do limite
         if(isForaDoLocalAutorizado(tag, localCoordenadas)){
             tag.setSaidaNaoAutorizada(true);
         }
 
-        // 3. Busca a última posição registrada deste dispositivo
+        // Busca a última posição registrada deste dispositivo
         Optional<Tag> ultimaTagOpt = tagRepository.findFirstByNumeroOrderByDataCriadoDesc(dto.numero());
 
-        // 4. Verifica se é uma nova fuga (transição de "dentro" para "fora")
+        // Verifica se é uma nova fuga (transição de "dentro" para "fora")
         boolean isNovaFuga = false;
         if (tag.isSaidaNaoAutorizada()) {
             if (ultimaTagOpt.isPresent()) {
@@ -75,8 +78,9 @@ public class TagService {
                         latAnterior, lonAnterior, latAtual, lonAtual
                 );
 
-                // 5. Salva se o animal se moveu mais que a distância mínima OU se acabou de fugir
+                // Salva se o animal se moveu mais que a distância mínima OU se acabou de fugir
                 if (distancia > DISTANCIA_MINIMA_METROS || isNovaFuga) {
+                    log.info("Cadastrar local da Tag com numero " +  tag.getNumero());
                     tagRepository.save(tag);
 
                     if (isNovaFuga) {
@@ -88,6 +92,7 @@ public class TagService {
             }
         } else {
             // Primeiro registro da tag
+            log.info("Cadastrar local da Tag com numero " +  tag.getNumero());
             tagRepository.save(tag);
             if (isNovaFuga) {
                 mandarEmailAlertaFuga(tag);
@@ -127,7 +132,7 @@ public class TagService {
 
     public void mandarEmailAlertaFuga(Tag tag) {
         Animal animal = tag.getAnimal();
-        if (animal == null) return; // Retorna rápido caso não tenha animal vinculado
+        if (animal == null) return;
 
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom("tag.dog.tcc@gmail.com");
@@ -144,7 +149,7 @@ public class TagService {
             if (admin.getEmail() != null) emailsDestino.add(admin.getEmail());
         });
 
-        if (emailsDestino.isEmpty()) return; // Não tenta enviar se não tiver destinatários
+        if (emailsDestino.isEmpty()) return;
 
         message.setTo(emailsDestino.toArray(new String[0]));
         message.setSubject("TagDog - Pet saiu sem autorização: " + animal.getNome());
@@ -152,6 +157,7 @@ public class TagService {
                 + "ultrapassou o perímetro de segurança configurado.\n\n"
                 + "Acesse a plataforma imediatamente para verificar as coordenadas atuais e rastrear a localização.");
 
+        log.info("Email de saida nao autorizada do Animal com matricula " + animal.getMatricula() + " por email para " + Arrays.toString(emailsDestino.toArray(new String[0])));
         mailSender.send(message);
     }
 }

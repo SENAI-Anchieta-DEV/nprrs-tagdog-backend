@@ -4,6 +4,9 @@ import com.senai.nprrs_tagdog_backend.application.dto.AnimalDTO;
 import com.senai.nprrs_tagdog_backend.application.service.AnimalService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -23,10 +26,43 @@ public class AnimalController {
     private final AnimalService service;
 
     @Operation(
-            summary = "Cadastrar animal",
-            description = "Realiza o cadastro de um animal"
+            summary = "Cadastrar um novo animal",
+            description = "Realiza o cadastro do animal",
+            parameters = {
+                    @Parameter(name = "emailOuCpfTutor", description = "email ou cpf do tutor a ter mais um animal", example = "admin@email.com")
+            },
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    required = true,
+                    content = @Content(
+                            schema = @Schema(implementation = AnimalDTO.AnimalRegistroDTO.class),
+                            examples = @ExampleObject(name = "Exemplo válido", value = """
+                                        {
+                                              "imagem": "",
+                                              "nome": "Bob",
+                                              "raca": "Golden Retriever",
+                                              "sexo": "MACHO",
+                                              "porte": "GRANDE",
+                                              "dataNascimento": "2026-02-19",
+                                              "descricao": "Alergia a chocolate"
+                                          }
+                                    """
+                            )
+                    )
+            ),
+            responses = {
+                    @ApiResponse(responseCode = "201", description = "Cadastro realizado com sucesso"),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Entidade não encontrada",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    examples = {
+                                            @ExampleObject(name = "Tutor não encontrado", value = "\"Tutor não encontrado\""),
+                                    }
+                            )
+                    ),
+            }
     )
-    @ApiResponse(responseCode = "201", description = "Animal cadastrado com sucesso")
     @PostMapping("/emailOuCpfTutor/{emailOuCpfTutor}")
     public ResponseEntity<AnimalDTO.AnimalResponseDTO> criar(
             @Valid @RequestBody AnimalDTO.AnimalRegistroDTO dto, @PathVariable String emailOuCpfTutor) {
@@ -40,7 +76,10 @@ public class AnimalController {
 
     @Operation(
             summary = "Listar animais",
-            description = "Retorna todos os animais cadastrados"
+            description = "Retorna todos os animais cadastrados",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Lista retornada com sucesso")
+            }
     )
     @GetMapping
     public ResponseEntity<List<AnimalDTO.AnimalResponseDTO>> listar() {
@@ -57,20 +96,67 @@ public class AnimalController {
     }
 
     @Operation(
-            summary = "Buscar animal por matrícula",
-            description = "Retorna um animal a partir da matrícula"
+            summary = "Buscar um animal por matrícula",
+            description = "Retorna um animal a partir da matrícula",
+            parameters = {
+                    @Parameter(name = "matricula", description = "matricula do animal a ser buscado", example = "TD-12345")
+            },
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Animal retornado com sucesso"),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Animal não encontrado",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    examples = @ExampleObject(name = "Animal não encontrado", value = "\"Animal não encontrado\"")
+                            )
+                    )
+            }
     )
     @GetMapping("/matricula/{matricula}")
-    public ResponseEntity<AnimalDTO.AnimalResponseDTO> buscarPorMatricula(
-            @Parameter(description = "Matrícula do animal", example = "C12")
-            @PathVariable String matricula) {
+    public ResponseEntity<AnimalDTO.AnimalResponseDTO> buscarPorMatricula(@PathVariable String matricula) {
 
         return ResponseEntity.ok(service.buscarPorMatricula(matricula));
     }
 
     @Operation(
-            summary = "Atualizar animal",
-            description = "Atualiza os dados de um animal pela matrícula"
+            summary = "Atualizar um animal pela matricula",
+            description = "Atualiza os dados de um animal pela matrícula",
+            parameters = {
+                    @Parameter(name = "matricula", description = "matricula do animal a ser atualizado", example = "TD-12345")
+            },
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    required = true,
+                    content = @Content(
+                            schema = @Schema(implementation = AnimalDTO.AnimalRegistroDTO.class),
+                            examples = @ExampleObject(name = "Exemplo válido", value = """
+                                        {
+                                              "imagem": "",
+                                              "matricula": "C12",
+                                              "nome": "Bob2",
+                                              "raca": "Golden Retriever",
+                                              "sexo": "MACHO",
+                                              "porte": "GRANDE",
+                                              "dataNascimento": "2026-02-19",
+                                              "descricao": "Alergia a chocolate"
+                                          }
+                                    """
+                            )
+                    )
+            ),
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Atualização realizada com sucesso"),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Animal não encontrado",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    examples = {
+                                            @ExampleObject(name = "Animal não encontrado", value = "\"Animal não encontrado\""),
+                                    }
+                            )
+                    )
+            }
     )
     @PutMapping("/matricula/{matricula}")
     public ResponseEntity<AnimalDTO.AnimalResponseDTO> atualizar(
@@ -82,7 +168,23 @@ public class AnimalController {
 
     @Operation(
             summary = "Adicionar ou atualizar tag do animal",
-            description = "Adicionar ou atualizar tag do animal pela matrícula"
+            description = "Adicionar ou atualizar tag do animal pela matrícula",
+            parameters = {
+                    @Parameter(name = "matricula", description = "matricula do animal a ser atualizado", example = "TD-12345")
+            },
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Atualização realizada com sucesso"),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Animal não encontrado",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    examples = {
+                                            @ExampleObject(name = "Animal não encontrado", value = "\"Animal não encontrado\""),
+                                    }
+                            )
+                    )
+            }
     )
     @PutMapping("/matricula/{matricula}/tag/{tag}")
     public ResponseEntity<AnimalDTO.AnimalResponseDTO> atualizar(
@@ -94,9 +196,24 @@ public class AnimalController {
 
     @Operation(
             summary = "Desativar animal",
-            description = "Realiza o soft delete do animal"
+            description = "Realiza o soft delete do animal",
+            parameters = {
+                    @Parameter(name = "matricula", description = "matricula do animal a ser desativado", example = "TD-12345")
+            },
+            responses = {
+                    @ApiResponse(responseCode = "204", description = "Animal removido com sucesso"),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Animal não encontrado",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    examples = {
+                                            @ExampleObject(name = "Animal não encontrado", value = "\"Animal não encontrado\""),
+                                    }
+                            )
+                    )
+            }
     )
-
     @DeleteMapping("/deletar/matricula/{matricula}")
     public void deletar(@PathVariable String matricula) {
         service.deletar(matricula);

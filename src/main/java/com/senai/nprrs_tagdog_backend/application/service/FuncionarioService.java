@@ -8,6 +8,7 @@ import com.senai.nprrs_tagdog_backend.domain.exceptions.EntidadeDuplicadaExcepti
 import com.senai.nprrs_tagdog_backend.domain.repository.AnimalRepository;
 import com.senai.nprrs_tagdog_backend.domain.repository.FuncionarioRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +19,7 @@ import java.util.List;
 @Service
 @Transactional
 @RequiredArgsConstructor
+@Log4j2
 public class FuncionarioService {
     private final FuncionarioRepository funcionarioRepository;
     private final AnimalRepository animalRepository;
@@ -29,6 +31,7 @@ public class FuncionarioService {
         }
         Funcionario funcionario = dto.toEntity();
         funcionario.setSenha(passwordEncoder.encode(dto.senha()));
+        log.info("Cadastrar Funcionario com email " +  funcionario.getEmail());
         return FuncionarioDTO.FuncionarioResponseDTO.fromEntity(funcionarioRepository.save(funcionario));
     }
 
@@ -42,11 +45,13 @@ public class FuncionarioService {
             funcionario.getAnimais().add(animal);
         }
 
+        log.info("Adicionar Animal com matricula " + animal.getMatricula() + " sob os cuidados do Funcionario com email " +  funcionario.getEmail());
         return FuncionarioDTO.FuncionarioResponseDTO.fromEntity(funcionarioRepository.save(funcionario));
     }
 
     @Transactional(readOnly = true)
-    public List<FuncionarioDTO.FuncionarioResponseDTO> listarFuncionariosAtivos() {
+    public List<FuncionarioDTO.FuncionarioResponseDTO> listarFuncionarios() {
+        log.info("Listar Admin");
         return funcionarioRepository.findAll()
                 .stream()
                 .map(FuncionarioDTO.FuncionarioResponseDTO::fromEntity)
@@ -54,7 +59,8 @@ public class FuncionarioService {
     }
 
     @Transactional(readOnly = true)
-    public FuncionarioDTO.FuncionarioResponseDTO buscarFuncionarioAtivoPorEmail(String email) {
+    public FuncionarioDTO.FuncionarioResponseDTO buscarFuncionarioEmail(String email) {
+        log.info("Buscar Funcionario por email " + email);
         return FuncionarioDTO.FuncionarioResponseDTO.fromEntity(buscarFuncionarioPorEmail(email));
     }
 
@@ -64,6 +70,7 @@ public class FuncionarioService {
         funcionario.setNome(dto.nome());
         funcionario.setEmail(dto.email());
         funcionario.setSenha(passwordEncoder.encode(dto.senha()));
+        log.info("Atualizar Funcionario com email " +  funcionario.getEmail());
         return FuncionarioDTO.FuncionarioResponseDTO.fromEntity(funcionarioRepository.save(funcionario));
     }
 
@@ -74,6 +81,7 @@ public class FuncionarioService {
             throw new ConflitosDeEstadoException("Funcionário já está desativado.");
         }
         funcionario.setAtivo(false);
+        log.info("Desativar Funcionario com email " + email);
         funcionarioRepository.save(funcionario);
     }
 

@@ -7,6 +7,7 @@ import com.senai.nprrs_tagdog_backend.domain.exceptions.EntidadeDuplicadaExcepti
 import com.senai.nprrs_tagdog_backend.domain.exceptions.EntidadeNaoEncontradaException;
 import com.senai.nprrs_tagdog_backend.domain.repository.AdminRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +17,7 @@ import java.util.List;
 @Service
 @Transactional
 @RequiredArgsConstructor
+@Log4j2
 public class AdminService {
     private final AdminRepository adminRepository;
     private final PasswordEncoder passwordEncoder;
@@ -26,11 +28,13 @@ public class AdminService {
         }
         Admin admin = dto.toEntity();
         admin.setSenha(passwordEncoder.encode(dto.senha()));
+        log.info("Cadastrar Admin com email " +  admin.getEmail());
         return AdminDTO.AdminResponseDTO.fromEntity(adminRepository.save(admin));
     }
 
     @Transactional(readOnly = true)
-    public List<AdminDTO.AdminResponseDTO> listarAdmiAtivos() {
+    public List<AdminDTO.AdminResponseDTO> listarAdmin() {
+        log.info("Listar Admin");
         return adminRepository.findAll()
                 .stream()
                 .map(AdminDTO.AdminResponseDTO::fromEntity)
@@ -38,30 +42,34 @@ public class AdminService {
     }
 
     @Transactional(readOnly = true)
-    public AdminDTO.AdminResponseDTO buscarAdminAtivoPorEmail(String email) {
-        return AdminDTO.AdminResponseDTO.fromEntity(buscarAdminPorEmailEAtivoTrue(email));
+    public AdminDTO.AdminResponseDTO buscarAdminEmail(String email) {
+        log.info("Buscar Admin por email " + email);
+        return AdminDTO.AdminResponseDTO.fromEntity(buscarAdminPorEmail(email));
     }
 
     public AdminDTO.AdminResponseDTO atualizarAdmin(String email, AdminDTO.AdminRegistroDTO dto) {
-        Admin admin = buscarAdminPorEmailEAtivoTrue(email);
+        Admin admin = buscarAdminPorEmail(email);
 
         admin.setNome(dto.nome());
         admin.setEmail(dto.email());
         admin.setSenha(passwordEncoder.encode(dto.senha()));
+        log.info("Atualizar Admin com email " +  admin.getEmail());
         return AdminDTO.AdminResponseDTO.fromEntity(adminRepository.save(admin));
     }
 
     public void desativarAdmin(String email) {
-        Admin admin = buscarAdminPorEmailEAtivoTrue(email);
+        Admin admin = buscarAdminPorEmail(email);
 
         if (!admin.isAtivo()) {
             throw new ConflitosDeEstadoException("Administrador já está desativado.");
         }
         admin.setAtivo(false);
+
+        log.info("Desativar Admin com email " + email);
         adminRepository.save(admin);
     }
 
-    private Admin buscarAdminPorEmailEAtivoTrue(String email) {
+    private Admin buscarAdminPorEmail(String email) {
         return adminRepository.findByEmail(email)
                 .orElseThrow(() -> new EntidadeNaoEncontradaException("Administrador não encontrado"));
     }

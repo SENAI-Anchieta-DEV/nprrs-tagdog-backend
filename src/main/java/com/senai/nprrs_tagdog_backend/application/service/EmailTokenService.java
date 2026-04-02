@@ -9,6 +9,7 @@ import com.senai.nprrs_tagdog_backend.domain.exceptions.RegraNegocioException;
 import com.senai.nprrs_tagdog_backend.domain.repository.EmailTokenRepository;
 import com.senai.nprrs_tagdog_backend.domain.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,6 +23,7 @@ import java.util.Random;
 @Service
 @Transactional
 @RequiredArgsConstructor
+@Log4j2
 public class EmailTokenService {
     private final EmailTokenRepository emailTokenRepository;
     private final UsuarioRepository usuarioRepository;
@@ -36,20 +38,24 @@ public class EmailTokenService {
         Integer token = random.nextInt(100000, 999999);
 
         EmailToken emailToken = new EmailToken();
+        //Se existir um token, muda seus números e a data de expiracao
         if(emailTokenRepository.findByUsuario(usuario) != null){
             emailToken = emailTokenRepository.findByUsuario(usuario);
             emailToken.setToken(token);
             emailToken.setDataExpirado(LocalDateTime.now().plusDays(1));
+            log.info("Atualizacao do Token do Usuario com email " +  email);
             emailTokenRepository.save(emailToken);
             mandarEmail(usuario, emailToken);
-        } else {
+        } else { //Se nao existir um token, cria um novo
             emailToken.setUsuario(usuario);
             emailToken.setToken(token);
             emailToken.setDataExpirado(LocalDateTime.now().plusDays(1));
             emailToken.setDataCriado(LocalDateTime.now());
+            log.info("Criacao do Token do Usuario com email " +  email);
             emailTokenRepository.save(emailToken);
             mandarEmail(usuario, emailToken);
         }
+
         return EmailTokenDTO.fromEntity(emailToken);
     }
 
@@ -62,7 +68,7 @@ public class EmailTokenService {
                 "\n\nPara redefinir a sua senha use o token: "
                 + "\n\n" + emailToken.getToken()
                 + "\n\nO token irá expirar em 1 dia.");
-
+        log.info("Enviando email sobre o Token para Usuario com email " +  usuario.getEmail());
         mailSender.send(message);
     }
 
@@ -81,6 +87,7 @@ public class EmailTokenService {
         }
 
         usuario.setSenha(passwordEncoder.encode(dto.senha()));
+        log.info("Validando o Token para Usuario com email " +  usuario.getEmail());
         usuarioRepository.save(usuario);
         emailTokenRepository.delete(emailToken);
     }
