@@ -157,7 +157,15 @@ public class TagService {
                 + "ultrapassou o perímetro de segurança configurado.\n\n"
                 + "Acesse a plataforma imediatamente para verificar as coordenadas atuais e rastrear a localização.");
 
-        log.info("Email de saida nao autorizada do Animal com matricula " + animal.getMatricula() + " por email para " + Arrays.toString(emailsDestino.toArray(new String[0])));
-        mailSender.send(message);
+        log.info("Email de saida nao autorizada do Animal com matricula " + animal.getMatricula() + " mandada para " + Arrays.toString(emailsDestino.toArray(new String[0])));
+//        mailSender.send(message);
+    }
+
+    public List<TagDTO.TagResponseDTO> buscarPosicoesAtuais() {
+        log.info("Listar Tag atuais");
+        return tagRepository.findUltimasPosicoesDeCadaTag()
+                .stream()
+                .map(TagDTO.TagResponseDTO::fromEntity)
+                .toList();
     }
 }
