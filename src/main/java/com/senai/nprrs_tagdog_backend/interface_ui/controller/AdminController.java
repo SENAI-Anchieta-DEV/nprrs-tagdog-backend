@@ -42,7 +42,17 @@ public class AdminController {
                     )
             ),
             responses = {
-                    @ApiResponse(responseCode = "201", description = "Cadastro realizado com sucesso")
+                    @ApiResponse(responseCode = "201", description = "Cadastro realizado com sucesso"),
+                    @ApiResponse(
+                            responseCode = "409",
+                            description = "Entidade duplicada",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    examples = {
+                                            @ExampleObject(name = "Administrador com este e-mail", value = "\"Administrador com este e-mail\""),
+                                    }
+                            )
+                    ),
             }
     )
     @PostMapping
@@ -54,19 +64,19 @@ public class AdminController {
     }
 
     @Operation(
-            summary = "Listar todos os administradores ativos",
+            summary = "Listar todos os administradores",
             description = "Retorna todos os administradores cadastrados",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Lista retornada com sucesso")
             }
     )
     @GetMapping
-    public ResponseEntity<List<AdminDTO.AdminResponseDTO>> listarAdminAtivos() {
-        return ResponseEntity.ok(adminService.listarAdmiAtivos());
+    public ResponseEntity<List<AdminDTO.AdminResponseDTO>> listarAdmin() {
+        return ResponseEntity.ok(adminService.listarAdmin());
     }
 
     @Operation(
-            summary = "Buscar um administrador ativo pelo email",
+            summary = "Buscar um administrador pelo email",
             description = "Retorna um administrador cadastrado",
             parameters = {
                     @Parameter(name = "email", description = "email do administrador a ser buscado", example = "admin@email.com")
@@ -85,11 +95,11 @@ public class AdminController {
     )
     @GetMapping("/email/{email}")
     public ResponseEntity<AdminDTO.AdminResponseDTO> buscarAdminAtivoPorEmail(@PathVariable String email) {
-        return ResponseEntity.ok(adminService.buscarAdminAtivoPorEmail(email));
+        return ResponseEntity.ok(adminService.buscarAdminEmail(email));
     }
 
     @Operation(
-            summary = "Atualizar um administrador ativo pelo email",
+            summary = "Atualizar um administrador pelo email",
             description = "Realiza a atualização do administrador",
             parameters = {
                     @Parameter(name = "email", description = "email do administrador a ser atualizado", example = "admin@email.com")
@@ -137,7 +147,7 @@ public class AdminController {
                     @ApiResponse(responseCode = "204", description = "Administrador removido com sucesso"),
                     @ApiResponse(
                             responseCode = "404",
-                            description = "Usuário não encontrado",
+                            description = "Administrador não encontrado",
                             content = @Content(
                                     mediaType = "application/json",
                                     examples = {

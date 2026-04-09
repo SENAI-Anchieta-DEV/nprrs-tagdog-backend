@@ -42,7 +42,17 @@ public class FuncionarioController {
                     )
             ),
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Cadastro realizado com sucesso")
+                    @ApiResponse(responseCode = "200", description = "Cadastro realizado com sucesso"),
+                    @ApiResponse(
+                            responseCode = "409",
+                            description = "Entidade duplicada",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    examples = {
+                                            @ExampleObject(name = "Funcionario com este e-mail", value = "\"Funcionario com este e-mail\""),
+                                    }
+                            )
+                    ),
             }
     )
     @PostMapping
@@ -54,14 +64,22 @@ public class FuncionarioController {
     }
 
     @Operation(
-            summary = "Adicionar um animal sob cuidade de um funcionario",
+            summary = "Adicionar um animal sob cuidado de um funcionario",
             description = "Adiciona um animal no funcionario",
             parameters = {
                     @Parameter(name = "email", description = "email do funcionario a ser buscado", example = "funcionario@email.com"),
                     @Parameter(name = "animalMatricula", description = "matricula do animal adicionado", example = "TD-12345")
             },
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Cadastro realizado com sucesso")
+                    @ApiResponse(responseCode = "200", description = "Cadastro realizado com sucesso"),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Entidade não encontrada",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    examples = @ExampleObject(name = "Entidade não encontrada", value = "\"Entidade não encontrada\"")
+                            )
+                    )
             }
     )
     @PostMapping("/email/{email}/animalMatricula/{animalMatricula}")
@@ -81,7 +99,7 @@ public class FuncionarioController {
     )
     @GetMapping
     public ResponseEntity<List<FuncionarioDTO.FuncionarioResponseDTO>> listarFuncinariosAtivos() {
-        return ResponseEntity.ok(funcionarioService.listarFuncionariosAtivos());
+        return ResponseEntity.ok(funcionarioService.listarFuncionarios());
     }
 
     @Operation(
@@ -104,7 +122,7 @@ public class FuncionarioController {
     )
     @GetMapping("/email/{email}")
     public ResponseEntity<FuncionarioDTO.FuncionarioResponseDTO> buscarFuncionarioAtivoPorEmail(@PathVariable String email) {
-        return ResponseEntity.ok(funcionarioService.buscarFuncionarioAtivoPorEmail(email));
+        return ResponseEntity.ok(funcionarioService.buscarFuncionarioEmail(email));
     }
 
     @Operation(

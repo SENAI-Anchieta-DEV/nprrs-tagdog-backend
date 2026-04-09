@@ -1,7 +1,6 @@
 package com.senai.nprrs_tagdog_backend.interface_ui.controller;
 
 import com.senai.nprrs_tagdog_backend.application.dto.EmailTokenDTO;
-import com.senai.nprrs_tagdog_backend.application.dto.FuncionarioDTO;
 import com.senai.nprrs_tagdog_backend.application.dto.SenhaDTO;
 import com.senai.nprrs_tagdog_backend.application.service.EmailTokenService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -32,7 +31,17 @@ public class EmailTokenController {
                     @Parameter(name = "email", description = "email do usuario a ser buscado", example = "tutor@email.com")
             },
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Cadastro realizado com sucesso")
+                    @ApiResponse(responseCode = "200", description = "Token enviado com sucesso"),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Usuário não encontrado",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    examples = {
+                                            @ExampleObject(name = "Usuário não encontrado", value = "\"Usuário não encontrado\""),
+                                    }
+                            )
+                    )
             }
     )
     @PostMapping("/email/{email}")
@@ -61,7 +70,27 @@ public class EmailTokenController {
                     )
             ),
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Token validado com sucesso")
+                    @ApiResponse(responseCode = "200", description = "Token validado com sucesso"),
+                    @ApiResponse(
+                            responseCode = "409",
+                            description = "EmailToken inválido",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    examples = {
+                                            @ExampleObject(name = "EmailToken inválido", value = "\"EmailToken inválido\""),
+                                    }
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "409",
+                            description = "Data do EmailToken expirada",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    examples = {
+                                            @ExampleObject(name = "Data do EmailToken expirada", value = "\"Data do EmailToken expirada\""),
+                                    }
+                            )
+                    )
             }
     )
     @PutMapping

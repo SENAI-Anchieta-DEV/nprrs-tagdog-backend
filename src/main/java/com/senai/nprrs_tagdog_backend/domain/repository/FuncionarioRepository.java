@@ -1,9 +1,7 @@
 package com.senai.nprrs_tagdog_backend.domain.repository;
 
+import com.senai.nprrs_tagdog_backend.domain.entity.Animal;
 import com.senai.nprrs_tagdog_backend.domain.entity.Funcionario;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -14,4 +12,5 @@ import java.util.Optional;
 public interface FuncionarioRepository extends JpaRepository<Funcionario, String> {
     List<Funcionario> findAll();
     Optional<Funcionario> findByEmail(String email);
+    Funcionario findByAnimais(Animal animal);
 }

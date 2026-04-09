@@ -9,6 +9,7 @@ import com.senai.nprrs_tagdog_backend.domain.repository.AnimalRepository;
 import com.senai.nprrs_tagdog_backend.domain.repository.EnderecoRepository;
 import com.senai.nprrs_tagdog_backend.domain.repository.TutorRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ import java.util.List;
 @Service
 @Transactional
 @RequiredArgsConstructor
+@Log4j2
 public class TutorService {
     private final TutorRepository tutorRepository;
     private final AnimalRepository animalRepository;
@@ -49,16 +51,19 @@ public class TutorService {
         animal.setMatricula("TD-" + novaMatricula);
         tutor.getAnimais().add(animal);
 
+        log.info("Cadastrar Tutor com email " +  tutor.getEmail());
         tutorRepository.save(tutor);
 
         if (tutor.getAnimais().isEmpty()) {
             throw new OperacaoNaoPermitidaException("Nenhum animal vinculado.");
         }
+        log.info("Cadastrar Animal com matricula " +  animal.getMatricula());
         animalRepository.saveAll(tutor.getAnimais());
 
         if (dto.endereco() == null) {
             throw new DadosInvalidosException("Endereço é obrigatório.");
         }
+        log.info("Cadastrar Endereco do Tutor com email " +  tutor.getEmail());
         enderecoRepository.save(dto.endereco().toEntity());
 
         return TutorDTO.TutorResponseDTO.fromEntity(tutor);
@@ -66,6 +71,7 @@ public class TutorService {
 
     @Transactional(readOnly = true)
     public List<TutorDTO.TutorResponseDTO> listarTutoresAtivos() {
+        log.info("Listar Tutor");
         return tutorRepository.findAll()
                 .stream()
                 .map(TutorDTO.TutorResponseDTO::fromEntity)
@@ -74,6 +80,7 @@ public class TutorService {
 
     @Transactional(readOnly = true)
     public TutorDTO.TutorResponseDTO buscarTutorPorEmailOuCpf(String emailOuCpf) {
+        log.info("Buscar Tutor por email ou cpf " + emailOuCpf);
         return TutorDTO.TutorResponseDTO.fromEntity(buscaDeTutorPorEmailOuCpf(emailOuCpf));
     }
 
@@ -88,6 +95,7 @@ public class TutorService {
         Endereco endereco = enderecoRepository.save(dto.endereco().toEntity());
         tutor.setEndereco(endereco);
 
+        log.info("Atualizar Tutor com email " +  tutor.getEmail());
         return TutorDTO.TutorResponseDTO.fromEntity(tutorRepository.save(tutor));
     }
 
@@ -96,6 +104,7 @@ public class TutorService {
 
         if (tutor.isAtivo()){
             tutor.setAtivo(false);
+            log.info("Desativar Tutor com email ou cpf " + emailOuCpf);
             tutorRepository.save(tutor);
         } else {
             throw new ConflitosDeEstadoException("Tutor já está desativado");

@@ -2,7 +2,6 @@ package com.senai.nprrs_tagdog_backend.interface_ui.controller;
 
 import com.senai.nprrs_tagdog_backend.application.dto.AuthDTO;
 import com.senai.nprrs_tagdog_backend.application.service.AuthService;
-import com.senai.nprrs_tagdog_backend.domain.repository.UsuarioRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -24,7 +23,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AuthController {
     private final AuthService auth;
-    private final UsuarioRepository usuarios;
 
     @Operation(
             summary = "Logar um novo usuario",
