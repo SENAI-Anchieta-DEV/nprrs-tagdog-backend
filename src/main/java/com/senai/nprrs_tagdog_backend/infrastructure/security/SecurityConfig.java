@@ -35,7 +35,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**", "/swagger-ui/**", "/v3/api-docs/**", "/h2-console/**", "/api/tags").permitAll()
+                        .requestMatchers("/auth/**", "/swagger-ui/**", "/v3/api-docs/**", "/h2-console/**", "/api/tags", "/actuator/**").permitAll()
 
                         .requestMatchers(HttpMethod.POST, "/api/emailtoken/email/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/admin", "/api/local").hasRole("ADMIN")
