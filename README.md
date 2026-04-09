@@ -1,0 +1,3 @@
+
+#mosquitto_pub -h localhost -t "0806meupet/rastreador/coordenadas" -m '{\"numero\": \"1\", \"latitude\": \"-23.591316433799992\", \"longitude\": \"-46.64509172099156\", \"dataCriado\": \"25/03/2026 10:00:00\"}'
+#mosquitto_pub -h localhost -t "0806meupet/rastreador/coordenadas" -m '{\"numero\": \"1\", \"latitude\": \"-23.598687053341486\", \"longitude\": \"-46.635431711971236\", \"dataCriado\": \"25/03/2026 11:00:00\"}'
