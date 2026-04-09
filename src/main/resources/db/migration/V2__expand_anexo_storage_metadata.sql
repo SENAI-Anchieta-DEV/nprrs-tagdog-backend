@@ -1,0 +1,13 @@
+ALTER TABLE anexo ADD COLUMN provider VARCHAR(30);
+ALTER TABLE anexo ADD COLUMN nome_original VARCHAR(255);
+ALTER TABLE anexo ADD COLUMN nome_armazenado VARCHAR(255);
+ALTER TABLE anexo ADD COLUMN storage_key VARCHAR(1000);
+ALTER TABLE anexo ADD COLUMN content_type VARCHAR(150);
+ALTER TABLE anexo ADD COLUMN tamanho_bytes BIGINT;
+
+UPDATE anexo
+SET nome_original = COALESCE(nome_original, nome_arquivo),
+    nome_armazenado = COALESCE(nome_armazenado, nome_arquivo),
+    storage_key = COALESCE(storage_key, nome_arquivo),
+    provider = COALESCE(provider, 'LOCAL')
+WHERE id IS NOT NULL;
