@@ -60,6 +60,6 @@ services:
 
 databases:
   - name: nprrs-tagdog-backend-db
-    databaseName: nprrs-tagdog-backend
-    user: nprrs-tagdog-backend
+    databaseName: tagdog
+    user: tagdog
     plan: free
