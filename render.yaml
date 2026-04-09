@@ -45,16 +45,16 @@ services:
         value: uploads
       - key: APP_STORAGE_LOCAL_PUBLIC_PATH
         value: /uploads
-      - key: APP_STORAGE_FIREBASE_BUCKET
-        sync: false
-      - key: APP_STORAGE_FIREBASE_PROJECT_ID
-        sync: false
-      - key: APP_STORAGE_FIREBASE_CREDENTIALS_BASE64
-        sync: false
-      - key: APP_STORAGE_FIREBASE_CREDENTIALS_JSON
-        sync: false
-      - key: APP_STORAGE_FIREBASE_FOLDER
-        value: uploads
+#      - key: APP_STORAGE_FIREBASE_BUCKET
+#        sync: false
+#      - key: APP_STORAGE_FIREBASE_PROJECT_ID
+#        sync: false
+#      - key: APP_STORAGE_FIREBASE_CREDENTIALS_BASE64
+#        sync: false
+#      - key: APP_STORAGE_FIREBASE_CREDENTIALS_JSON
+#        sync: false
+#      - key: APP_STORAGE_FIREBASE_FOLDER
+#        value: uploads
       - key: EMAIL_PASSWORD
         sync: false
 

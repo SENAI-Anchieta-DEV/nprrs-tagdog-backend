@@ -110,10 +110,10 @@ CREATE TABLE Email_Token (
 -- =========================
 -- TABELA ANEXO
 -- =========================
-CREATE TABLE anexo (
-    id VARCHAR(36) PRIMARY KEY,
-    nome_arquivo VARCHAR(255),
-    url VARCHAR(1000),
-    usuario_id VARCHAR(36),
-    CONSTRAINT fk_anexo_usuario FOREIGN KEY (usuario_id) REFERENCES usuario (id)
-);
+-- CREATE TABLE anexo (
+--     id VARCHAR(36) PRIMARY KEY,
+--     nome_arquivo VARCHAR(255),
+--     url VARCHAR(1000),
+--     usuario_id VARCHAR(36),
+--     CONSTRAINT fk_anexo_usuario FOREIGN KEY (usuario_id) REFERENCES usuario (id)
+-- );
