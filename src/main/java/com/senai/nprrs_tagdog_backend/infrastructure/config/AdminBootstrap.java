@@ -4,6 +4,7 @@ import com.senai.nprrs_tagdog_backend.domain.entity.Admin;
 import com.senai.nprrs_tagdog_backend.domain.entity.Role;
 import com.senai.nprrs_tagdog_backend.domain.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -11,9 +12,13 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
+@Log4j2
 public class AdminBootstrap implements CommandLineRunner {
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
+
+    @Value("${sistema.admin.enabled}")
+    private boolean enabled;
 
     @Value("${sistema.admin.email}")
     private String adminEmail;
@@ -23,6 +28,11 @@ public class AdminBootstrap implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
+        if (!enabled) {
+            log.info("Bootstrap do admin desabilitado. Nenhuma ação será executada.");
+            return;
+        }
+
         usuarioRepository.findByEmail(adminEmail).ifPresentOrElse(
                 usuario -> {
                     if (!usuario.isAtivo()) {
