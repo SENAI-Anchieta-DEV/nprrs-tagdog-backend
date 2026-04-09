@@ -39,12 +39,12 @@ services:
         sync: false
       - key: APP_BOOTSTRAP_ADMIN_PASSWORD
         sync: false
-      - key: APP_STORAGE_PROVIDER
-        value: firebase
-      - key: APP_STORAGE_LOCAL_BASE_PATH
-        value: uploads
-      - key: APP_STORAGE_LOCAL_PUBLIC_PATH
-        value: /uploads
+#      - key: APP_STORAGE_PROVIDER
+#        value: firebase
+#      - key: APP_STORAGE_LOCAL_BASE_PATH
+#        value: uploads
+#      - key: APP_STORAGE_LOCAL_PUBLIC_PATH
+#        value: /uploads
 #      - key: APP_STORAGE_FIREBASE_BUCKET
 #        sync: false
 #      - key: APP_STORAGE_FIREBASE_PROJECT_ID
