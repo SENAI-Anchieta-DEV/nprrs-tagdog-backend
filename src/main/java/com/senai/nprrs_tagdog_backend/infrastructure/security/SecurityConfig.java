@@ -26,7 +26,7 @@ public class SecurityConfig {
         http
                 .cors(cors1 -> cors1.configurationSource(request -> {
                     var cors = new org.springframework.web.cors.CorsConfiguration();
-                    cors.setAllowedOrigins(java.util.List.of("http://localhost:3000", "http://localhost:8080", "https://tagdog-5f6da.web.app/", "https://tagdog-5f6da.firebaseapp.com/"));
+                    cors.setAllowedOrigins(java.util.List.of("http://localhost:3000", "http://localhost:8080", "https://tagdog-5f6da.web.app", "https://tagdog-5f6da.firebaseapp.com"));
                     cors.setAllowedMethods(java.util.List.of("GET","POST","PUT","DELETE","OPTIONS"));
                     cors.setAllowedHeaders(java.util.List.of("*"));
                     cors.setAllowCredentials(true);
