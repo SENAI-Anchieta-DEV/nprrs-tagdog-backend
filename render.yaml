@@ -59,6 +59,8 @@ services:
 #        value: uploads
       - key: EMAIL_PASSWORD
         sync: false
+      - key: PORT
+        value: 10000
 
 databases:
   - name: nprrs-tagdog-backend-db
