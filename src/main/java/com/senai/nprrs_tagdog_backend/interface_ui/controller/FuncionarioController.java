@@ -116,7 +116,7 @@ public class FuncionarioController {
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     required = true,
                     content = @Content(
-                            schema = @Schema(implementation = FuncionarioDTO.FuncionarioRegistroDTO.class),
+                            schema = @Schema(implementation = FuncionarioDTO.FuncionarioAtualizarDTO.class),
                             examples = @ExampleObject(name = "Exemplo válido", value = """
                                         {
                                              "nome": "Nome",
@@ -142,7 +142,7 @@ public class FuncionarioController {
             }
     )
     @PutMapping("/email/{email}")
-    public ResponseEntity<FuncionarioDTO.FuncionarioResponseDTO> atualizarFuncionarioPorEmail(@PathVariable String email, @Valid @RequestBody FuncionarioDTO.FuncionarioRegistroDTO dto) {
+    public ResponseEntity<FuncionarioDTO.FuncionarioResponseDTO> atualizarFuncionarioPorEmail(@PathVariable String email, @Valid @RequestBody FuncionarioDTO.FuncionarioAtualizarDTO dto) {
         return ResponseEntity.ok(funcionarioService.atualizarFuncionario(email, dto));
     }
 
