@@ -64,12 +64,14 @@ public class FuncionarioService {
         return FuncionarioDTO.FuncionarioResponseDTO.fromEntity(buscarFuncionarioPorEmail(email));
     }
 
-    public FuncionarioDTO.FuncionarioResponseDTO atualizarFuncionario(String email, FuncionarioDTO.FuncionarioRegistroDTO dto) {
+    public FuncionarioDTO.FuncionarioResponseDTO atualizarFuncionario(String email, FuncionarioDTO.FuncionarioAtualizarDTO dto) {
         Funcionario funcionario = buscarFuncionarioPorEmail(email);
 
         funcionario.setNome(dto.nome());
         funcionario.setEmail(dto.email());
-        funcionario.setSenha(passwordEncoder.encode(dto.senha()));
+        if (dto.senha() != null && !dto.senha().isBlank()) {
+            funcionario.setSenha(passwordEncoder.encode(dto.senha()));
+        }
         log.info("Atualizar Funcionario com email " +  funcionario.getEmail());
         return FuncionarioDTO.FuncionarioResponseDTO.fromEntity(funcionarioRepository.save(funcionario));
     }

@@ -160,7 +160,7 @@ public class FuncionarioController {
             }
     )
     @PutMapping("/email/{email}")
-    public ResponseEntity<FuncionarioDTO.FuncionarioResponseDTO> atualizarFuncionarioPorEmail(@PathVariable String email, @Valid @RequestBody FuncionarioDTO.FuncionarioRegistroDTO dto) {
+    public ResponseEntity<FuncionarioDTO.FuncionarioResponseDTO> atualizarFuncionarioPorEmail(@PathVariable String email, @Valid @RequestBody FuncionarioDTO.FuncionarioAtualizarDTO dto) {
         return ResponseEntity.ok(funcionarioService.atualizarFuncionario(email, dto));
     }
 
