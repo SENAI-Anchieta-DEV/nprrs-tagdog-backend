@@ -5,6 +5,7 @@ import com.senai.nprrs_tagdog_backend.domain.entity.Animal;
 import com.senai.nprrs_tagdog_backend.domain.entity.Funcionario;
 import com.senai.nprrs_tagdog_backend.domain.exceptions.ConflitosDeEstadoException;
 import com.senai.nprrs_tagdog_backend.domain.exceptions.EntidadeDuplicadaException;
+import com.senai.nprrs_tagdog_backend.domain.exceptions.RegraNegocioException;
 import com.senai.nprrs_tagdog_backend.domain.repository.AnimalRepository;
 import com.senai.nprrs_tagdog_backend.domain.repository.FuncionarioRepository;
 import lombok.RequiredArgsConstructor;
@@ -90,6 +91,19 @@ public class FuncionarioService {
         }
 
         funcionarioRepository.save(funcionario);
+    }
+
+    public void retirarAnimalDeFuncionario(String email, String matriculaAnimal) {
+        Funcionario funcionario = buscarFuncionarioPorEmail(email);
+        Animal animal = animalRepository.findByMatricula(matriculaAnimal).orElseThrow(
+                () -> new EntidadeNaoEncontradaException("Animal"));
+
+        if (funcionario.getAnimais().contains(animal)){
+            funcionario.getAnimais().remove(animal);
+            funcionarioRepository.save(funcionario);
+        } else {
+            throw new RegraNegocioException("Funcionario nao cuida desse animal");
+        }
     }
 
     private Funcionario buscarFuncionarioPorEmail(String email){

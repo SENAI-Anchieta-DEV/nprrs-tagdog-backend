@@ -104,11 +104,11 @@ public class TutorService {
 
         if (tutor.isAtivo()){
             tutor.setAtivo(false);
-            log.info("Desativar Admin com email ou cpf " + emailOuCpf);
+            log.info("Desativar Tutor com email ou cpf " + emailOuCpf);
             tutorRepository.save(tutor);
         } else {
             tutor.setAtivo(true);
-            log.info("Reativar Admin com email ou cpf " + emailOuCpf);
+            log.info("Reativar Tutor com email ou cpf " + emailOuCpf);
             tutorRepository.save(tutor);
         }
 
