@@ -104,12 +104,15 @@ public class TutorService {
 
         if (tutor.isAtivo()){
             tutor.setAtivo(false);
-            log.info("Desativar Tutor com email ou cpf " + emailOuCpf);
+            log.info("Desativar Admin com email ou cpf " + emailOuCpf);
             tutorRepository.save(tutor);
         } else {
-            throw new ConflitosDeEstadoException("Tutor já está desativado");
+            tutor.setAtivo(true);
+            log.info("Reativar Admin com email ou cpf " + emailOuCpf);
+            tutorRepository.save(tutor);
         }
 
+        tutorRepository.save(tutor);
     }
 
     private Tutor buscaDeTutorPorEmailOuCpf(String emailOuCpf){

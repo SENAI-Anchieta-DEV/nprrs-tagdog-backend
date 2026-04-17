@@ -79,11 +79,16 @@ public class FuncionarioService {
     public void desativarFuncionario(String email) {
         Funcionario funcionario = buscarFuncionarioPorEmail(email);
 
-        if (!funcionario.isAtivo()) {
-            throw new ConflitosDeEstadoException("Funcionário já está desativado.");
+        if (funcionario.isAtivo()){
+            funcionario.setAtivo(false);
+            log.info("Desativar Funcionario com email " + email);
+            funcionarioRepository.save(funcionario);
+        } else {
+            funcionario.setAtivo(true);
+            log.info("Reativar Funcionario com email " + email);
+            funcionarioRepository.save(funcionario);
         }
-        funcionario.setAtivo(false);
-        log.info("Desativar Funcionario com email " + email);
+
         funcionarioRepository.save(funcionario);
     }
 
