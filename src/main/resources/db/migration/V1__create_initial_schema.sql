@@ -108,6 +108,26 @@ CREATE TABLE Email_Token (
 );
 
 -- =========================
+-- TABELA CHECK_IN_CHECK_OUT
+-- =========================
+CREATE TABLE Check_In_Check_Out (
+    id VARCHAR(255) PRIMARY KEY,
+    check_in_ou_check_out VARCHAR(20) CHECK (check_in_ou_check_out IN ('CHECK_IN', 'CHECK_OUT')) NOT NULL,
+    data_hora TIMESTAMP NOT NULL
+);
+
+-- =========================
+-- TABELA CHECK_IN_CHECK_OUT_ANIMAIS
+-- =========================
+CREATE TABLE Check_In_Check_Out_Animais (
+    check_in_check_out_id VARCHAR(255),
+    animal_id VARCHAR(255),
+    PRIMARY KEY (check_in_check_out_id, animal_id),
+    FOREIGN KEY (check_in_check_out_id) REFERENCES Check_In_Check_Out(id),
+    FOREIGN KEY (animal_id) REFERENCES Animal(id)
+);
+
+-- =========================
 -- TABELA ANEXO
 -- =========================
 -- CREATE TABLE anexo (

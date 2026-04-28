@@ -1,6 +1,7 @@
 package com.senai.nprrs_tagdog_backend.interface_ui.controller;
 
 import com.senai.nprrs_tagdog_backend.application.dto.AnimalDTO;
+import com.senai.nprrs_tagdog_backend.application.dto.CheckInCheckOutDTO;
 import com.senai.nprrs_tagdog_backend.application.service.AnimalService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -187,11 +188,52 @@ public class AnimalController {
             }
     )
     @PutMapping("/matricula/{matricula}/tag/{tag}")
-    public ResponseEntity<AnimalDTO.AnimalResponseDTO> atualizar(
+    public ResponseEntity<AnimalDTO.AnimalResponseDTO> atualizarTag(
             @PathVariable String matricula,
             @PathVariable String tag) {
 
         return ResponseEntity.ok(service.tag(matricula, tag));
+    }
+
+    @Operation(
+            summary = "Adicionar ou check-in ou checkout do animal",
+            description = "Adicionar check-in ou checkout do animal pela matrícula",
+            parameters = {
+                    @Parameter(name = "matricula", description = "matricula do animal a ser atualizado", example = "TD-12345")
+            },
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    required = true,
+                    content = @Content(
+                            schema = @Schema(implementation = CheckInCheckOutDTO.class),
+                            examples = @ExampleObject(name = "Exemplo válido", value = """
+                                        {
+                                              "checkInOuCheckOut": "CHECK_IN",
+                                              "dataHora": "2026-03-24T10:00:00"
+                                          }
+                                    """
+                            )
+                    )
+            ),
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Atualização realizada com sucesso"),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Animal não encontrado",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    examples = {
+                                            @ExampleObject(name = "Animal não encontrado", value = "\"Animal não encontrado\""),
+                                    }
+                            )
+                    )
+            }
+    )
+    @PutMapping("/matricula/{matricula}/checkInOuCheckOut")
+    public ResponseEntity<AnimalDTO.AnimalResponseDTO> atualizarCheckInCheckOut(
+            @PathVariable String matricula,
+            @Valid @RequestBody CheckInCheckOutDTO dto) {
+
+        return ResponseEntity.ok(service.checkInOuCheckOut(matricula, dto));
     }
 
     @Operation(
