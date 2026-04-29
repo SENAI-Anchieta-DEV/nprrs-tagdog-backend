@@ -121,6 +121,7 @@ public class AnimalService {
         return AnimalDTO.AnimalResponseDTO.fromEntity(animal, tutor);
     }
 
+    @Transactional
     public AnimalDTO.AnimalResponseDTO checkInOuCheckOut(String matricula, CheckInCheckOutDTO dto) {
 
         Animal animal = repository.findByMatricula(matricula)

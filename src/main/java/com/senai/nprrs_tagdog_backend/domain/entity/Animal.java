@@ -49,9 +49,9 @@ public class Animal{
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinTable(
-            name = "check_in_ou_check_out_animais",
-            joinColumns = @JoinColumn(name = "check_in_ou_check_out_id"),
-            inverseJoinColumns = @JoinColumn(name = "animal_id")
+            name = "check_in_check_out_animais",
+            joinColumns = @JoinColumn(name = "animal_id"),
+            inverseJoinColumns = @JoinColumn(name = "check_in_check_out_id")
     )
     private List<CheckInCheckOut> checkInCheckOut;
 
