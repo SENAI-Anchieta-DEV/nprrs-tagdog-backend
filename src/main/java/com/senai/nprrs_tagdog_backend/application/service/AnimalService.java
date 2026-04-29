@@ -2,15 +2,20 @@ package com.senai.nprrs_tagdog_backend.application.service;
 
 import com.senai.nprrs_tagdog_backend.application.dto.AnimalDTO;
 import com.senai.nprrs_tagdog_backend.domain.entity.Animal;
+import com.senai.nprrs_tagdog_backend.domain.entity.CheckInCheckOut;
+import com.senai.nprrs_tagdog_backend.domain.entity.CheckInOuCheckOut;
 import com.senai.nprrs_tagdog_backend.domain.entity.Tutor;
 import com.senai.nprrs_tagdog_backend.domain.exceptions.EntidadeNaoEncontradaException;
 import com.senai.nprrs_tagdog_backend.domain.repository.AnimalRepository;
+import com.senai.nprrs_tagdog_backend.domain.repository.CheckInCheckOutRepository;
 import com.senai.nprrs_tagdog_backend.domain.repository.TutorRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -20,6 +25,7 @@ public class AnimalService {
 
     private final AnimalRepository repository;
     private final TutorRepository tutorRepository;
+    private final CheckInCheckOutRepository checkInCheckOutRepository;
 
     public AnimalDTO.AnimalResponseDTO registrar(AnimalDTO.AnimalRegistroDTO dto, String emailOuCpfTutor) {
 
@@ -112,6 +118,30 @@ public class AnimalService {
         repository.save(animal);
 
         log.info("Adicionar Tag " + tag + " no Animal com matricula " + matricula);
+        return AnimalDTO.AnimalResponseDTO.fromEntity(animal, tutor);
+    }
+
+    @Transactional
+    public AnimalDTO.AnimalResponseDTO checkInOuCheckOut(String matricula) {
+
+        Animal animal = repository.findByMatricula(matricula)
+                .orElseThrow(() -> new RuntimeException("Animal não encontrado"));
+
+        Tutor tutor = tutorRepository.findByAnimais(animal);
+
+        CheckInCheckOut entity = new CheckInCheckOut();
+        if(!animal.getCheckInCheckOut().isEmpty() && animal.getCheckInCheckOut().getLast().getCheckInOuCheckOut() == CheckInOuCheckOut.CHECK_IN){
+            entity.setCheckInOuCheckOut(CheckInOuCheckOut.CHECK_OUT);
+        } else {
+            entity.setCheckInOuCheckOut(CheckInOuCheckOut.CHECK_IN);
+        }
+
+        entity.setDataHora(LocalDateTime.now());
+        checkInCheckOutRepository.save(entity);
+
+        animal.getCheckInCheckOut().add(entity);
+        repository.save(animal);
+
         return AnimalDTO.AnimalResponseDTO.fromEntity(animal, tutor);
     }
 

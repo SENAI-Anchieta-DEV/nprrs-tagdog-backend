@@ -18,7 +18,7 @@ public class LocalCoordenadasService {
 
     public LocalCoordenadasDTO registrar(LocalCoordenadasDTO dto) {
         if(!localCoordenadasRepository.findAll().isEmpty()){
-            throw new RegraNegocioException("Coordenadas do local existe");
+            localCoordenadasRepository.deleteAll(localCoordenadasRepository.findAll());
         }
 
         log.info("Cadastrar Local com cep " +  dto.cep());

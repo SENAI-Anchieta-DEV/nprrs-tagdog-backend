@@ -60,12 +60,16 @@ public class AdminService {
     public void desativarAdmin(String email) {
         Admin admin = buscarAdminPorEmail(email);
 
-        if (!admin.isAtivo()) {
-            throw new ConflitosDeEstadoException("Administrador já está desativado.");
+        if (admin.isAtivo()){
+            admin.setAtivo(false);
+            log.info("Desativar Admin com email " + email);
+            adminRepository.save(admin);
+        } else {
+            admin.setAtivo(true);
+            log.info("Reativar Admin com email " + email);
+            adminRepository.save(admin);
         }
-        admin.setAtivo(false);
 
-        log.info("Desativar Admin com email " + email);
         adminRepository.save(admin);
     }
 

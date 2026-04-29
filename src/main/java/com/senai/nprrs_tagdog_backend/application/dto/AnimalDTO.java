@@ -1,12 +1,12 @@
 package com.senai.nprrs_tagdog_backend.application.dto;
 
 import com.senai.nprrs_tagdog_backend.domain.entity.*;
-import com.senai.nprrs_tagdog_backend.domain.repository.AnimalRepository;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class AnimalDTO {
     public record AnimalRegistroDTO(
@@ -82,6 +82,9 @@ public class AnimalDTO {
             @Schema(description = "Numero da tag do animal")
             String numeroTag,
 
+            @Schema(description = "CheckIn e CheckOut do animal")
+            List<CheckInCheckOut> checkInCheckOutAnimals,
+
             @Schema(description = "Animal ativo ou não")
             boolean ativo
     ) {
@@ -97,6 +100,7 @@ public class AnimalDTO {
                     animal.getDataNascimento(),
                     animal.getDescricao(),
                     animal.getNumeroTag(),
+                    animal.getCheckInCheckOut(),
                     animal.isAtivo()
             );
         }
@@ -130,6 +134,9 @@ public class AnimalDTO {
             @Schema(description = "Numero da tag do animal")
             String numeroTag,
 
+            @Schema(description = "CheckIn e CheckOut do animal")
+            List<CheckInCheckOut> checkInCheckOutAnimals,
+
             @Schema(description = "Animal ativo ou não")
             boolean ativo
     ) {
@@ -144,6 +151,7 @@ public class AnimalDTO {
                     animal.getDataNascimento(),
                     animal.getDescricao(),
                     animal.getNumeroTag(),
+                    animal.getCheckInCheckOut(),
                     animal.isAtivo()
             );
         }
