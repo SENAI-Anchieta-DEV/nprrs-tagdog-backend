@@ -1,7 +1,6 @@
 package com.senai.nprrs_tagdog_backend.interface_ui.controller;
 
 import com.senai.nprrs_tagdog_backend.application.dto.AnimalDTO;
-import com.senai.nprrs_tagdog_backend.application.dto.CheckInCheckOutDTO;
 import com.senai.nprrs_tagdog_backend.application.service.AnimalService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -201,19 +200,6 @@ public class AnimalController {
             parameters = {
                     @Parameter(name = "matricula", description = "matricula do animal a ser atualizado", example = "TD-12345")
             },
-            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                    required = true,
-                    content = @Content(
-                            schema = @Schema(implementation = CheckInCheckOutDTO.class),
-                            examples = @ExampleObject(name = "Exemplo válido", value = """
-                                        {
-                                              "checkInOuCheckOut": "CHECK_IN",
-                                              "dataHora": "2026-03-24T10:00:00"
-                                          }
-                                    """
-                            )
-                    )
-            ),
             responses = {
                     @ApiResponse(responseCode = "200", description = "Atualização realizada com sucesso"),
                     @ApiResponse(
@@ -230,10 +216,9 @@ public class AnimalController {
     )
     @PutMapping("/matricula/{matricula}/checkInOuCheckOut")
     public ResponseEntity<AnimalDTO.AnimalResponseDTO> atualizarCheckInCheckOut(
-            @PathVariable String matricula,
-            @Valid @RequestBody CheckInCheckOutDTO dto) {
+            @PathVariable String matricula) {
 
-        return ResponseEntity.ok(service.checkInOuCheckOut(matricula, dto));
+        return ResponseEntity.ok(service.checkInOuCheckOut(matricula));
     }
 
     @Operation(
