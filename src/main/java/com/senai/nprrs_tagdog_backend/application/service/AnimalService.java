@@ -27,6 +27,7 @@ public class AnimalService {
     private final TutorRepository tutorRepository;
     private final CheckInCheckOutRepository checkInCheckOutRepository;
 
+    @Transactional
     public AnimalDTO.AnimalResponseDTO registrar(AnimalDTO.AnimalRegistroDTO dto, String emailOuCpfTutor) {
 
         Tutor tutor = new Tutor();
@@ -55,6 +56,7 @@ public class AnimalService {
         return AnimalDTO.AnimalResponseDTO.fromEntity(animal, tutor);
     }
 
+    @Transactional
     public List<AnimalDTO.AnimalResponseDTO> listar() {
         log.info("Listar Animais");
         return repository.findAll()
@@ -66,6 +68,7 @@ public class AnimalService {
                 .toList();
     }
 
+    @Transactional
     public List<AnimalDTO.AnimalResponseDTO> listarAnimaisSemFuncionario() {
         log.info("Listar Animais sem Funcionário cuidando");
         return repository.findAnimaisSemFuncionario()
@@ -77,6 +80,7 @@ public class AnimalService {
                 .toList();
     }
 
+    @Transactional
     public AnimalDTO.AnimalResponseDTO buscarPorMatricula(String matricula) {
 
         Animal animal = repository.findByMatricula(matricula)
@@ -88,6 +92,7 @@ public class AnimalService {
         return AnimalDTO.AnimalResponseDTO.fromEntity(animal, tutor);
     }
 
+    @Transactional
     public AnimalDTO.AnimalResponseDTO atualizar(String matricula, AnimalDTO.AnimalRegistroDTO dto) {
 
         Animal animal = repository.findByMatricula(matricula)
@@ -108,6 +113,7 @@ public class AnimalService {
         return AnimalDTO.AnimalResponseDTO.fromEntity(animal, tutor);
     }
 
+    @Transactional
     public AnimalDTO.AnimalResponseDTO tag(String matricula, String tag) {
 
         Animal animal = repository.findByMatricula(matricula)
@@ -152,12 +158,14 @@ public class AnimalService {
 
         if (animal.isAtivo()){
             animal.setAtivo(false);
-            log.info("Desativar Admin com matricula " + matricula);
+            log.info("Desativar Animal com matricula " + matricula);
             repository.save(animal);
         } else {
-            animal.setAtivo(true);
-            log.info("Reativar Admin com matricula " + matricula);
-            repository.save(animal);
+            if(tutorRepository.findByAnimais(animal).isAtivo()){
+                animal.setAtivo(true);
+                log.info("Reativar Animal com matricula " + matricula);
+                repository.save(animal);
+            }
         }
 
         repository.save(animal);

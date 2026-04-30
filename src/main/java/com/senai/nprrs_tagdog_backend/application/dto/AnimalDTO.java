@@ -6,7 +6,9 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 public class AnimalDTO {
     public record AnimalRegistroDTO(
@@ -83,12 +85,16 @@ public class AnimalDTO {
             String numeroTag,
 
             @Schema(description = "CheckIn e CheckOut do animal")
-            List<CheckInCheckOut> checkInCheckOutAnimals,
+            List<CheckInCheckOut> checkInCheckOut,
 
             @Schema(description = "Animal ativo ou não")
             boolean ativo
     ) {
         public static AnimalResponseDTO fromEntity(Animal animal, Tutor tutor) {
+            List<CheckInCheckOut> checkInCheckOuts = Optional.ofNullable(animal.getCheckInCheckOut())
+                    .orElse(Collections.emptyList())
+                    .stream()
+                    .toList();
             return new AnimalResponseDTO(
                     animal.getImagem(),
                     animal.getMatricula(),
@@ -100,7 +106,7 @@ public class AnimalDTO {
                     animal.getDataNascimento(),
                     animal.getDescricao(),
                     animal.getNumeroTag(),
-                    animal.getCheckInCheckOut(),
+                    checkInCheckOuts,
                     animal.isAtivo()
             );
         }
@@ -135,12 +141,16 @@ public class AnimalDTO {
             String numeroTag,
 
             @Schema(description = "CheckIn e CheckOut do animal")
-            List<CheckInCheckOut> checkInCheckOutAnimals,
+            List<CheckInCheckOut> checkInCheckOut,
 
             @Schema(description = "Animal ativo ou não")
             boolean ativo
     ) {
         public static AnimalResponseSemTutorDTO fromEntity(Animal animal) {
+            List<CheckInCheckOut> checkInCheckOuts = Optional.ofNullable(animal.getCheckInCheckOut())
+                    .orElse(Collections.emptyList())
+                    .stream()
+                    .toList();
             return new AnimalResponseSemTutorDTO(
                     animal.getImagem(),
                     animal.getMatricula(),
@@ -151,7 +161,7 @@ public class AnimalDTO {
                     animal.getDataNascimento(),
                     animal.getDescricao(),
                     animal.getNumeroTag(),
-                    animal.getCheckInCheckOut(),
+                    checkInCheckOuts,
                     animal.isAtivo()
             );
         }
