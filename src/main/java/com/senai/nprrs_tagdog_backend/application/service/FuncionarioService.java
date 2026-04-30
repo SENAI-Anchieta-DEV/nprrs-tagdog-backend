@@ -52,7 +52,7 @@ public class FuncionarioService {
 
     @Transactional(readOnly = true)
     public List<FuncionarioDTO.FuncionarioResponseDTO> listarFuncionarios() {
-        log.info("Listar Admin");
+        log.info("Listar Funcionario");
         return funcionarioRepository.findAll()
                 .stream()
                 .map(FuncionarioDTO.FuncionarioResponseDTO::fromEntity)
