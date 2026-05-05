@@ -5,6 +5,7 @@ import com.senai.nprrs_tagdog_backend.domain.entity.Admin;
 import com.senai.nprrs_tagdog_backend.domain.exceptions.ConflitosDeEstadoException;
 import com.senai.nprrs_tagdog_backend.domain.exceptions.EntidadeDuplicadaException;
 import com.senai.nprrs_tagdog_backend.domain.exceptions.EntidadeNaoEncontradaException;
+import com.senai.nprrs_tagdog_backend.domain.exceptions.RegraNegocioException;
 import com.senai.nprrs_tagdog_backend.domain.repository.AdminRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -50,6 +51,9 @@ public class AdminService {
     public AdminDTO.AdminResponseDTO atualizarAdmin(String email, AdminDTO.AdminRegistroDTO dto) {
         Admin admin = buscarAdminPorEmail(email);
 
+        if(!admin.isAtivo()){
+            throw new RegraNegocioException("Entidade inativa");
+        }
         admin.setNome(dto.nome());
         admin.setEmail(dto.email());
         admin.setSenha(passwordEncoder.encode(dto.senha()));

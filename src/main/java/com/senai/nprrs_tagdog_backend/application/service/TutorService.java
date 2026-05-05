@@ -87,6 +87,9 @@ public class TutorService {
     public TutorDTO.TutorResponseDTO atualizarTutor(String emailOuCpf, TutorDTO.TutorAtualizacaoDTO dto) {
         Tutor tutor = buscaDeTutorPorEmailOuCpf(emailOuCpf);
 
+        if(!tutor.isAtivo()){
+            throw new RegraNegocioException("Entidade inativa");
+        }
         tutor.setNome(dto.nome());
         tutor.setEmail(dto.email());
         tutor.setCpf(dto.cpf());

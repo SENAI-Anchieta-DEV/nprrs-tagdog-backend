@@ -40,6 +40,10 @@ public class FuncionarioService {
         Funcionario funcionario = buscarFuncionarioPorEmail(email);
         Animal animal = animalRepository.findByMatricula(matriculaAnimal).orElseThrow(
                 () -> new EntidadeNaoEncontradaException("Animal"));
+
+        if (!funcionario.isAtivo()){
+            throw new RegraNegocioException("Entidade inativa");
+        }
         if(funcionario.getAnimais().contains(animal)){
             funcionario.getAnimais().remove(animal);
         } else {
@@ -68,6 +72,9 @@ public class FuncionarioService {
     public FuncionarioDTO.FuncionarioResponseDTO atualizarFuncionario(String email, FuncionarioDTO.FuncionarioAtualizarDTO dto) {
         Funcionario funcionario = buscarFuncionarioPorEmail(email);
 
+        if(!funcionario.isAtivo()){
+            throw new RegraNegocioException("Entidade inativa");
+        }
         funcionario.setNome(dto.nome());
         funcionario.setEmail(dto.email());
         if (dto.senha() != null && !dto.senha().isBlank()) {
@@ -98,6 +105,9 @@ public class FuncionarioService {
         Animal animal = animalRepository.findByMatricula(matriculaAnimal).orElseThrow(
                 () -> new EntidadeNaoEncontradaException("Animal"));
 
+        if(!funcionario.isAtivo()){
+            throw new RegraNegocioException("Entidade inativa");
+        }
         if (funcionario.getAnimais().contains(animal)){
             funcionario.getAnimais().remove(animal);
             funcionarioRepository.save(funcionario);

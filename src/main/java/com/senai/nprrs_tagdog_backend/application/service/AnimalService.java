@@ -6,6 +6,7 @@ import com.senai.nprrs_tagdog_backend.domain.entity.CheckInCheckOut;
 import com.senai.nprrs_tagdog_backend.domain.entity.CheckInOuCheckOut;
 import com.senai.nprrs_tagdog_backend.domain.entity.Tutor;
 import com.senai.nprrs_tagdog_backend.domain.exceptions.EntidadeNaoEncontradaException;
+import com.senai.nprrs_tagdog_backend.domain.exceptions.RegraNegocioException;
 import com.senai.nprrs_tagdog_backend.domain.repository.AnimalRepository;
 import com.senai.nprrs_tagdog_backend.domain.repository.CheckInCheckOutRepository;
 import com.senai.nprrs_tagdog_backend.domain.repository.TutorRepository;
@@ -99,6 +100,9 @@ public class AnimalService {
                 .orElseThrow(() -> new RuntimeException("Animal não encontrado"));
         Tutor tutor = tutorRepository.findByAnimais(animal);
 
+        if(!animal.isAtivo()){
+            throw new RegraNegocioException("Entidade inativa");
+        }
         animal.setImagem(dto.imagem());
         animal.setNome(dto.nome());
         animal.setRaca(dto.raca());
@@ -120,6 +124,9 @@ public class AnimalService {
                 .orElseThrow(() -> new RuntimeException("Animal não encontrado"));
         Tutor tutor = tutorRepository.findByAnimais(animal);
 
+        if(!animal.isAtivo()){
+            throw new RegraNegocioException("Entidade inativa");
+        }
         animal.setNumeroTag(tag);
         repository.save(animal);
 
@@ -135,6 +142,9 @@ public class AnimalService {
 
         Tutor tutor = tutorRepository.findByAnimais(animal);
 
+        if(!animal.isAtivo()){
+            throw new RegraNegocioException("Entidade inativa");
+        }
         CheckInCheckOut entity = new CheckInCheckOut();
         if(!animal.getCheckInCheckOut().isEmpty() && animal.getCheckInCheckOut().getLast().getCheckInOuCheckOut() == CheckInOuCheckOut.CHECK_IN){
             entity.setCheckInOuCheckOut(CheckInOuCheckOut.CHECK_OUT);
