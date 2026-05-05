@@ -137,3 +137,9 @@ CREATE TABLE Check_In_Check_Out_Animais (
 --     usuario_id VARCHAR(36),
 --     CONSTRAINT fk_anexo_usuario FOREIGN KEY (usuario_id) REFERENCES usuario (id)
 -- );
+
+INSERT INTO usuario (id, nome, email, senha, ativo, role, tipo_usuario)
+SELECT '51a8d2db-f882-4cc5-aded-57f5862fe54e', 'Admin', 'admin@exemplo.com', '$2a$10$.Z7BqZE4ubK1Nzfowu2ipOM6fTXzU.Z.40m5JXu8Rvg.DB2kJsAQy', TRUE, 'ADMIN', 'ADMIN'
+    WHERE NOT EXISTS (
+    SELECT 1 FROM usuario
+);
