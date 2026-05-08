@@ -5,6 +5,7 @@ import com.senai.nprrs_tagdog_backend.domain.entity.Animal;
 import com.senai.nprrs_tagdog_backend.domain.entity.Funcionario;
 import com.senai.nprrs_tagdog_backend.domain.exceptions.ConflitosDeEstadoException;
 import com.senai.nprrs_tagdog_backend.domain.exceptions.EntidadeDuplicadaException;
+import com.senai.nprrs_tagdog_backend.domain.exceptions.RegraNegocioException;
 import com.senai.nprrs_tagdog_backend.domain.repository.AnimalRepository;
 import com.senai.nprrs_tagdog_backend.domain.repository.FuncionarioRepository;
 import lombok.RequiredArgsConstructor;
@@ -51,7 +52,7 @@ public class FuncionarioService {
 
     @Transactional(readOnly = true)
     public List<FuncionarioDTO.FuncionarioResponseDTO> listarFuncionarios() {
-        log.info("Listar Admin");
+        log.info("Listar Funcionario");
         return funcionarioRepository.findAll()
                 .stream()
                 .map(FuncionarioDTO.FuncionarioResponseDTO::fromEntity)
@@ -64,12 +65,14 @@ public class FuncionarioService {
         return FuncionarioDTO.FuncionarioResponseDTO.fromEntity(buscarFuncionarioPorEmail(email));
     }
 
-    public FuncionarioDTO.FuncionarioResponseDTO atualizarFuncionario(String email, FuncionarioDTO.FuncionarioRegistroDTO dto) {
+    public FuncionarioDTO.FuncionarioResponseDTO atualizarFuncionario(String email, FuncionarioDTO.FuncionarioAtualizarDTO dto) {
         Funcionario funcionario = buscarFuncionarioPorEmail(email);
 
         funcionario.setNome(dto.nome());
         funcionario.setEmail(dto.email());
-        funcionario.setSenha(passwordEncoder.encode(dto.senha()));
+        if (dto.senha() != null && !dto.senha().isBlank()) {
+            funcionario.setSenha(passwordEncoder.encode(dto.senha()));
+        }
         log.info("Atualizar Funcionario com email " +  funcionario.getEmail());
         return FuncionarioDTO.FuncionarioResponseDTO.fromEntity(funcionarioRepository.save(funcionario));
     }
@@ -77,12 +80,30 @@ public class FuncionarioService {
     public void desativarFuncionario(String email) {
         Funcionario funcionario = buscarFuncionarioPorEmail(email);
 
-        if (!funcionario.isAtivo()) {
-            throw new ConflitosDeEstadoException("Funcionário já está desativado.");
+        if (funcionario.isAtivo()){
+            funcionario.setAtivo(false);
+            log.info("Desativar Funcionario com email " + email);
+            funcionarioRepository.save(funcionario);
+        } else {
+            funcionario.setAtivo(true);
+            log.info("Reativar Funcionario com email " + email);
+            funcionarioRepository.save(funcionario);
         }
-        funcionario.setAtivo(false);
-        log.info("Desativar Funcionario com email " + email);
+
         funcionarioRepository.save(funcionario);
+    }
+
+    public void retirarAnimalDeFuncionario(String email, String matriculaAnimal) {
+        Funcionario funcionario = buscarFuncionarioPorEmail(email);
+        Animal animal = animalRepository.findByMatricula(matriculaAnimal).orElseThrow(
+                () -> new EntidadeNaoEncontradaException("Animal"));
+
+        if (funcionario.getAnimais().contains(animal)){
+            funcionario.getAnimais().remove(animal);
+            funcionarioRepository.save(funcionario);
+        } else {
+            throw new RegraNegocioException("Funcionario nao cuida desse animal");
+        }
     }
 
     private Funcionario buscarFuncionarioPorEmail(String email){

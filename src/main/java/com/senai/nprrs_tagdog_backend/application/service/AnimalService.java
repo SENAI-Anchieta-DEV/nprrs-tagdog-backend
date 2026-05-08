@@ -2,15 +2,20 @@ package com.senai.nprrs_tagdog_backend.application.service;
 
 import com.senai.nprrs_tagdog_backend.application.dto.AnimalDTO;
 import com.senai.nprrs_tagdog_backend.domain.entity.Animal;
+import com.senai.nprrs_tagdog_backend.domain.entity.CheckInCheckOut;
+import com.senai.nprrs_tagdog_backend.domain.entity.CheckInOuCheckOut;
 import com.senai.nprrs_tagdog_backend.domain.entity.Tutor;
 import com.senai.nprrs_tagdog_backend.domain.exceptions.EntidadeNaoEncontradaException;
 import com.senai.nprrs_tagdog_backend.domain.repository.AnimalRepository;
+import com.senai.nprrs_tagdog_backend.domain.repository.CheckInCheckOutRepository;
 import com.senai.nprrs_tagdog_backend.domain.repository.TutorRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -20,7 +25,9 @@ public class AnimalService {
 
     private final AnimalRepository repository;
     private final TutorRepository tutorRepository;
+    private final CheckInCheckOutRepository checkInCheckOutRepository;
 
+    @Transactional
     public AnimalDTO.AnimalResponseDTO registrar(AnimalDTO.AnimalRegistroDTO dto, String emailOuCpfTutor) {
 
         Tutor tutor = new Tutor();
@@ -49,6 +56,7 @@ public class AnimalService {
         return AnimalDTO.AnimalResponseDTO.fromEntity(animal, tutor);
     }
 
+    @Transactional
     public List<AnimalDTO.AnimalResponseDTO> listar() {
         log.info("Listar Animais");
         return repository.findAll()
@@ -60,6 +68,7 @@ public class AnimalService {
                 .toList();
     }
 
+    @Transactional
     public List<AnimalDTO.AnimalResponseDTO> listarAnimaisSemFuncionario() {
         log.info("Listar Animais sem Funcionário cuidando");
         return repository.findAnimaisSemFuncionario()
@@ -71,6 +80,7 @@ public class AnimalService {
                 .toList();
     }
 
+    @Transactional
     public AnimalDTO.AnimalResponseDTO buscarPorMatricula(String matricula) {
 
         Animal animal = repository.findByMatricula(matricula)
@@ -82,6 +92,7 @@ public class AnimalService {
         return AnimalDTO.AnimalResponseDTO.fromEntity(animal, tutor);
     }
 
+    @Transactional
     public AnimalDTO.AnimalResponseDTO atualizar(String matricula, AnimalDTO.AnimalRegistroDTO dto) {
 
         Animal animal = repository.findByMatricula(matricula)
@@ -102,6 +113,7 @@ public class AnimalService {
         return AnimalDTO.AnimalResponseDTO.fromEntity(animal, tutor);
     }
 
+    @Transactional
     public AnimalDTO.AnimalResponseDTO tag(String matricula, String tag) {
 
         Animal animal = repository.findByMatricula(matricula)
@@ -115,6 +127,30 @@ public class AnimalService {
         return AnimalDTO.AnimalResponseDTO.fromEntity(animal, tutor);
     }
 
+    @Transactional
+    public AnimalDTO.AnimalResponseDTO checkInOuCheckOut(String matricula) {
+
+        Animal animal = repository.findByMatricula(matricula)
+                .orElseThrow(() -> new RuntimeException("Animal não encontrado"));
+
+        Tutor tutor = tutorRepository.findByAnimais(animal);
+
+        CheckInCheckOut entity = new CheckInCheckOut();
+        if(!animal.getCheckInCheckOut().isEmpty() && animal.getCheckInCheckOut().getLast().getCheckInOuCheckOut() == CheckInOuCheckOut.CHECK_IN){
+            entity.setCheckInOuCheckOut(CheckInOuCheckOut.CHECK_OUT);
+        } else {
+            entity.setCheckInOuCheckOut(CheckInOuCheckOut.CHECK_IN);
+        }
+
+        entity.setDataHora(LocalDateTime.now());
+        checkInCheckOutRepository.save(entity);
+
+        animal.getCheckInCheckOut().add(entity);
+        repository.save(animal);
+
+        return AnimalDTO.AnimalResponseDTO.fromEntity(animal, tutor);
+    }
+
     public void deletar(String matricula) {
 
         Animal animal = repository.findByMatricula(matricula)
@@ -122,12 +158,14 @@ public class AnimalService {
 
         if (animal.isAtivo()){
             animal.setAtivo(false);
-            log.info("Desativar Admin com matricula " + matricula);
+            log.info("Desativar Animal com matricula " + matricula);
             repository.save(animal);
         } else {
-            animal.setAtivo(true);
-            log.info("Reativar Admin com matricula " + matricula);
-            repository.save(animal);
+            if(tutorRepository.findByAnimais(animal).isAtivo()){
+                animal.setAtivo(true);
+                log.info("Reativar Animal com matricula " + matricula);
+                repository.save(animal);
+            }
         }
 
         repository.save(animal);

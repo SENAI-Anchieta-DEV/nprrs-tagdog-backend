@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Data
@@ -45,6 +46,14 @@ public class Animal{
     private String descricao;
 
     private String numeroTag;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "check_in_check_out_animais",
+            joinColumns = @JoinColumn(name = "animal_id"),
+            inverseJoinColumns = @JoinColumn(name = "check_in_check_out_id")
+    )
+    private List<CheckInCheckOut> checkInCheckOut;
 
     @Column(nullable = false)
     protected boolean ativo;

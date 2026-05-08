@@ -160,7 +160,7 @@ public class FuncionarioController {
             }
     )
     @PutMapping("/email/{email}")
-    public ResponseEntity<FuncionarioDTO.FuncionarioResponseDTO> atualizarFuncionarioPorEmail(@PathVariable String email, @Valid @RequestBody FuncionarioDTO.FuncionarioRegistroDTO dto) {
+    public ResponseEntity<FuncionarioDTO.FuncionarioResponseDTO> atualizarFuncionarioPorEmail(@PathVariable String email, @Valid @RequestBody FuncionarioDTO.FuncionarioAtualizarDTO dto) {
         return ResponseEntity.ok(funcionarioService.atualizarFuncionario(email, dto));
     }
 
@@ -187,6 +187,33 @@ public class FuncionarioController {
     @DeleteMapping("/email/{email}")
     public ResponseEntity<Void> desativarFuncionario(@PathVariable String email) {
         funcionarioService.desativarFuncionario(email);
+        return ResponseEntity.noContent().build();
+    }
+
+    @Operation(
+            summary = "Retirar um animal sob cuidado do funcionario",
+            description = "Retirar um animal sob cuidado do funcionario da base de dados",
+            parameters = {
+                    @Parameter(name = "email", description = "email do funcionario a ter animal retirado", example = "funcionario@email.com"),
+                    @Parameter(name = "matriculaAnimal", description = "matricula do animal a ser removido", example = "TD-12345")
+            },
+            responses = {
+                    @ApiResponse(responseCode = "204", description = "Animal removido de Funcionario com sucesso"),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Usuário não encontrado",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    examples = {
+                                            @ExampleObject(name = "Funcionario não encontrado", value = "\"Funcionario não encontrado ou inativo\""),
+                                    }
+                            )
+                    )
+            }
+    )
+    @PutMapping("/email/{email}/matriculaAnimal/{matriculaAnimal}")
+    public ResponseEntity<Void> retirarAnimalDeFuncionario(@PathVariable String email, @PathVariable String matriculaAnimal) {
+        funcionarioService.retirarAnimalDeFuncionario(email, matriculaAnimal);
         return ResponseEntity.noContent().build();
     }
 }

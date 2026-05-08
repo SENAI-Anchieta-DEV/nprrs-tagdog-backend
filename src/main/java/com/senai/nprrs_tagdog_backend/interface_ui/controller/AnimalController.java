@@ -187,11 +187,38 @@ public class AnimalController {
             }
     )
     @PutMapping("/matricula/{matricula}/tag/{tag}")
-    public ResponseEntity<AnimalDTO.AnimalResponseDTO> atualizar(
+    public ResponseEntity<AnimalDTO.AnimalResponseDTO> atualizarTag(
             @PathVariable String matricula,
             @PathVariable String tag) {
 
         return ResponseEntity.ok(service.tag(matricula, tag));
+    }
+
+    @Operation(
+            summary = "Adicionar ou check-in ou checkout do animal",
+            description = "Adicionar check-in ou checkout do animal pela matrícula",
+            parameters = {
+                    @Parameter(name = "matricula", description = "matricula do animal a ser atualizado", example = "TD-12345")
+            },
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Atualização realizada com sucesso"),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Animal não encontrado",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    examples = {
+                                            @ExampleObject(name = "Animal não encontrado", value = "\"Animal não encontrado\""),
+                                    }
+                            )
+                    )
+            }
+    )
+    @PutMapping("/matricula/{matricula}/checkInOuCheckOut")
+    public ResponseEntity<AnimalDTO.AnimalResponseDTO> atualizarCheckInCheckOut(
+            @PathVariable String matricula) {
+
+        return ResponseEntity.ok(service.checkInOuCheckOut(matricula));
     }
 
     @Operation(

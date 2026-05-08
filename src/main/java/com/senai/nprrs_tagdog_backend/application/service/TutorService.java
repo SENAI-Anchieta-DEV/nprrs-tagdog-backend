@@ -70,7 +70,7 @@ public class TutorService {
     }
 
     @Transactional(readOnly = true)
-    public List<TutorDTO.TutorResponseDTO> listarTutoresAtivos() {
+    public List<TutorDTO.TutorResponseDTO> listarTutores() {
         log.info("Listar Tutor");
         return tutorRepository.findAll()
                 .stream()
@@ -104,12 +104,17 @@ public class TutorService {
 
         if (tutor.isAtivo()){
             tutor.setAtivo(false);
-            log.info("Desativar Tutor com email ou cpf " + emailOuCpf);
+            tutor.getAnimais().forEach(animal -> animal.setAtivo(false));
+            animalRepository.saveAll(tutor.getAnimais());
+            log.info("Desativar Tutor e seus Animais com email ou cpf " + emailOuCpf);
             tutorRepository.save(tutor);
         } else {
-            throw new ConflitosDeEstadoException("Tutor já está desativado");
+            tutor.setAtivo(true);
+            log.info("Reativar Tutor com email ou cpf " + emailOuCpf);
+            tutorRepository.save(tutor);
         }
 
+        tutorRepository.save(tutor);
     }
 
     private Tutor buscaDeTutorPorEmailOuCpf(String emailOuCpf){

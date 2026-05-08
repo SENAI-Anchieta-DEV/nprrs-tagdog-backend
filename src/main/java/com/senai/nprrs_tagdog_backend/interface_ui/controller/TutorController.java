@@ -91,8 +91,8 @@ public class TutorController {
             }
     )
     @GetMapping
-    public ResponseEntity<List<TutorDTO.TutorResponseDTO>> listarFuncinariosAtivos() {
-        return ResponseEntity.ok(tutorService.listarTutoresAtivos());
+    public ResponseEntity<List<TutorDTO.TutorResponseDTO>> listarTutores() {
+        return ResponseEntity.ok(tutorService.listarTutores());
     }
 
     @Operation(

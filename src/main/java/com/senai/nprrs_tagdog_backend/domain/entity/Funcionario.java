@@ -13,7 +13,7 @@ import java.util.List;
 @SuperBuilder
 @DiscriminatorValue("FUNCIONARIO")
 public class Funcionario extends Usuario{
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
             name = "funcionario_animais",
             joinColumns = @JoinColumn(name = "funcionario_id"),
