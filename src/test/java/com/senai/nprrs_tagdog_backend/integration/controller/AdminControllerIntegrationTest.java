@@ -72,5 +72,7 @@ class AdminControllerIntegrationTest {
                 .body("email", equalTo("fabianopeixoto@email.com"));
     }
 
-
 }
+
+//Feito por Sabrina Matos
+
