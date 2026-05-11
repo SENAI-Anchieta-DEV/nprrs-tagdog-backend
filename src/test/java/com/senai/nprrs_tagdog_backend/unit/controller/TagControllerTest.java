@@ -1,0 +1,5 @@
+package com.senai.nprrs_tagdog_backend.unit.controller;
+
+class TagControllerTest {
+
+}
