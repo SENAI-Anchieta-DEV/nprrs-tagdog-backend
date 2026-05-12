@@ -99,7 +99,7 @@ class EmailTokenControllerIntegrationTest {
                 .contentType(ContentType.JSON)
                 .body(senhaDTO)
                 .when()
-                .put("/api/emailtoken/token")
+                .put("/api/emailtoken")
                 .then()
                 .statusCode(204); // ✅ CORRETO: esperado no fluxo de sucesso
 
