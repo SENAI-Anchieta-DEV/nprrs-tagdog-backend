@@ -54,6 +54,7 @@ class TutorControllerIntegrationTest {
         RestAssured.baseURI = "http://localhost";
         RestAssured.port = port;
 
+        // Limpeza na ordem correta (filhos primeiro se não houver Cascade)
         animalRepository.deleteAll();
         tutorRepository.deleteAll();
         adminRepository.deleteAll();
@@ -72,6 +73,8 @@ class TutorControllerIntegrationTest {
     @DisplayName("Deve registrar um novo tutor com animal e endereço com sucesso")
     void deveRegistrarTutorViaApi() {
 
+        // 1. Verifique se o formato da data (2022-05-20) é aceito pelo seu banco/DTO.
+        // Se der erro de data, tente usar LocalDate.now() apenas para testar.
         AnimalDTO.AnimalRegistroDTO animalDTO = new AnimalDTO.AnimalRegistroDTO(
                 "http://link-imagem.com/foto.jpg",
                 "Bob",
@@ -86,16 +89,14 @@ class TutorControllerIntegrationTest {
                 "88000-000", "Rua das Flores", "Bairro Norte", "Florianópolis", "SC", "100", "Casa"
         );
 
-        // ORDEM CORRIGIDA CONFORME SEU RECORD TutorRegistroDTO:
-        // 1. nome, 2. email, 3. senha, 4. cpf, 5. telefone, 6. endereco, 7. animal
         TutorDTO.TutorRegistroDTO payload = new TutorDTO.TutorRegistroDTO(
-                "João Silva",           // nome
-                "joao.silva@email.com", // email
-                "senha123",             // senha (TERCEIRO PARÂMETRO)
-                "123.456.789-00",       // cpf
-                "(48) 99999-9999",      // telefone
-                enderecoDTO,            // endereco
-                animalDTO               // animal
+                "João Silva",
+                "joao.silva@email.com",
+                "senha123",
+                "123.456.789-00",
+                "(48) 99999-9999",
+                enderecoDTO,
+                animalDTO
         );
 
         given()
@@ -103,13 +104,14 @@ class TutorControllerIntegrationTest {
                 .header("Authorization", "Bearer " + adminToken)
                 .body(payload)
                 .when()
-                .post("/api/tutor")
+                .post("/api/tutores") // CORREÇÃO 1: Adicionado o "es" no final da rota
                 .then()
-                .log().all() // Mantido para você ver o sucesso ou detalhe de erro
+                .log().all()
                 .statusCode(201)
                 .body("nome", is("João Silva"))
                 .body("email", is("joao.silva@email.com"))
                 .body("cpf", is("123.456.789-00"))
-                .body("animais", hasSize(greaterThanOrEqualTo(1)))
+                // CORREÇÃO 2: Verifique se o retorno vem como 'animais' (lista) ou 'animal' (objeto).
+                // Com base no seu DTO de registro, geralmente o retorno segue o nome da lista na Entity.
                 .body("animais[0].nome", is("Bob"));
     }}
