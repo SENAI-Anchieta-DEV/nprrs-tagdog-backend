@@ -28,7 +28,7 @@ public class Tag {
     @Column(nullable = false)
     private String longitude;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "animal_id", nullable = true)
     private Animal animal;
 

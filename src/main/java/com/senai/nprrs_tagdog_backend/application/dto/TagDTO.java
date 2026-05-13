@@ -47,7 +47,7 @@ public class TagDTO {
             @Schema(description = "Longitude")
             String longitude,
             @Schema(description = "Animal que esta com a tag no momento")
-            Animal animal,
+            AnimalDTO.AnimalResponseSemTutorDTO animal,
             @Schema(description = "Data Criado")
             LocalDateTime dataCriado,
             @Schema(description = "Saida nao autorizada")
@@ -56,11 +56,16 @@ public class TagDTO {
             boolean ativo
     ) {
         public static TagDTO.TagResponseDTO fromEntity(Tag tag) {
+            AnimalDTO.AnimalResponseSemTutorDTO animalDTO = null;
+            if (tag.getAnimal() != null) {
+                animalDTO = AnimalDTO.AnimalResponseSemTutorDTO.fromEntity(tag.getAnimal());
+            }
+
             return new TagDTO.TagResponseDTO(
                     tag.getNumero(),
                     tag.getLatitude(),
                     tag.getLongitude(),
-                    tag.getAnimal(),
+                    animalDTO,
                     tag.getDataCriado(),
                     tag.isSaidaNaoAutorizada(),
                     tag.isAtivo()
