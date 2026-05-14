@@ -1,7 +1,7 @@
 package com.senai.nprrs_tagdog_backend.interface_ui.controller;
 
-import com.rafaelcosta.spring_mqttx.domain.annotation.MqttPayload;
-import com.rafaelcosta.spring_mqttx.domain.annotation.MqttSubscriber;
+//import com.rafaelcosta.spring_mqttx.domain.annotation.MqttPayload;
+//import com.rafaelcosta.spring_mqttx.domain.annotation.MqttSubscriber;
 import com.senai.nprrs_tagdog_backend.application.dto.TagDTO;
 import com.senai.nprrs_tagdog_backend.application.dto.TutorDTO;
 import com.senai.nprrs_tagdog_backend.application.service.TagService;
@@ -29,11 +29,11 @@ import java.util.List;
 public class TagController {
     private final TagService tagService;
 
-    @MqttSubscriber("0806meupet/rastreador/coordenadas")
-    public void salvar(@MqttPayload TagDTO.TagRegistroDTO dto) {
-        tagService.salvar(dto);
-        log.info(dto);
-    }
+//    @MqttSubscriber("0806meupet/rastreador/coordenadas")
+//    public void salvar(@MqttPayload TagDTO.TagRegistroDTO dto) {
+//        tagService.salvar(dto);
+//        log.info(dto);
+//    }
 
     @Operation(
             summary = "Buscar a ultima tag recebida",
