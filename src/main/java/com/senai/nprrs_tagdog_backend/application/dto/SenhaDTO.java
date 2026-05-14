@@ -9,8 +9,9 @@ public record SenhaDTO (
         @NotBlank
         @Schema(description = "Email do usuario")
         String email,
+        @NotNull
         @Schema(description = "Token do usuario")
-        String token,
+        Integer token,
         @NotNull
         @NotBlank
         @Schema(description = "Senha a ser alterada")

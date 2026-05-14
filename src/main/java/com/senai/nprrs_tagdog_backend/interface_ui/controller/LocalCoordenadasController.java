@@ -12,7 +12,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -100,7 +99,6 @@ public class LocalCoordenadasController {
             }
     )
     @DeleteMapping("/cep/{cep}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deletar(@PathVariable String cep) {
         service.deletar(cep);
     }

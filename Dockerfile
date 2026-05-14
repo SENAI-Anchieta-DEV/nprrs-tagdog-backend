@@ -1,3 +1,8 @@
+WORKDIR /tmp/lib-build
+RUN git clone https://github.com/RafaelPinheiroCosta/spring-mqttx.git .
+RUN mvn versions:set -DnewVersion=1.1.0 -DgenerateBackupPoms=false
+RUN mvn clean install -DskipTests
+
 FROM maven:3.9.9-eclipse-temurin-21 AS build
 WORKDIR /app
 COPY pom.xml .

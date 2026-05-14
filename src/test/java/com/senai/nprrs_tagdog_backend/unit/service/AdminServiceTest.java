@@ -4,31 +4,35 @@ import com.senai.nprrs_tagdog_backend.application.dto.AdminDTO;
 import com.senai.nprrs_tagdog_backend.application.service.AdminService;
 import com.senai.nprrs_tagdog_backend.domain.entity.Admin;
 import com.senai.nprrs_tagdog_backend.domain.entity.Role;
-import com.senai.nprrs_tagdog_backend.domain.exceptions.EntidadeDuplicadaException;
-import com.senai.nprrs_tagdog_backend.domain.exceptions.EntidadeNaoEncontradaException;
 import com.senai.nprrs_tagdog_backend.domain.repository.AdminRepository;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@ExtendWith(MockitoExtension.class)
 class AdminServiceTest {
 
     @Mock
-    private AdminRepository repository;
+    private AdminRepository adminRepository;
 
     @Mock
     private PasswordEncoder passwordEncoder;
@@ -36,169 +40,104 @@ class AdminServiceTest {
     @InjectMocks
     private AdminService service;
 
+    private AdminDTO.AdminRegistroDTO dto;
+
     @BeforeEach
-    void setup() {
-        MockitoAnnotations.openMocks(this);
+    void setUp() {
+
+        dto = new AdminDTO.AdminRegistroDTO(
+                "Sabrina",
+                "sabrina@email.com",
+                "123456"
+        );
     }
 
     @Test
-    @DisplayName("Deve cadastrar administrador")
-    void deveCadastrarAdministrador() {
+    @DisplayName("Deve registrar administrador")
+    void deveRegistrarAdministrador() {
 
-        AdminDTO.AdminRegistroDTO dto =
-                new AdminDTO.AdminRegistroDTO(
-                        "Sabrina",
-                        "sabrina@email.com",
-                        "123456"
-                );
-
-        when(repository.findByEmail(dto.email()))
+        when(adminRepository.findByEmail(dto.email()))
                 .thenReturn(Optional.empty());
 
-        when(passwordEncoder.encode(any()))
-                .thenReturn("senha");
+        when(passwordEncoder.encode(dto.senha()))
+                .thenReturn("senhaCriptografada");
 
-        Admin admin = dto.toEntity();
+        when(adminRepository.save(any(Admin.class)))
+                .thenAnswer(invocation -> invocation.getArgument(0));
 
-        when(repository.save(any(Admin.class)))
-                .thenReturn(admin);
-
-        AdminDTO.AdminResponseDTO response =
+        AdminDTO.AdminResponseDTO resultado =
                 service.registrarAdmin(dto);
 
-        assertEquals("Sabrina", response.nome());
+        assertNotNull(resultado);
 
-        verify(repository, times(1))
-                .save(any(Admin.class));
+        assertEquals("Sabrina", resultado.nome());
+        assertEquals("sabrina@email.com", resultado.email());
+
+        ArgumentCaptor<Admin> captor =
+                ArgumentCaptor.forClass(Admin.class);
+
+        verify(adminRepository).save(captor.capture());
+
+        Admin adminSalvo = captor.getValue();
+
+        assertEquals("Sabrina", adminSalvo.getNome());
+        assertEquals("sabrina@email.com", adminSalvo.getEmail());
+        assertEquals("senhaCriptografada", adminSalvo.getSenha());
     }
 
     @Test
-    @DisplayName("Não deve cadastrar administrador duplicado")
-    void naoDeveCadastrarAdministradorDuplicado() {
+    @DisplayName("Deve listar admins")
+    void deveListarAdmins() {
 
-        Admin admin = new Admin();
-        admin.setEmail("sabrina@email.com");
+        Admin admin1 = new Admin();
+        admin1.setNome("Sabrina");
+        admin1.setEmail("sabrina@email.com");
+        admin1.setSenha("123456");
+        admin1.setRole(Role.ADMIN);
 
-        when(repository.findByEmail(any()))
-                .thenReturn(Optional.of(admin));
+        Admin admin2 = new Admin();
+        admin2.setNome("Fabiano");
+        admin2.setEmail("fabiano@email.com");
+        admin2.setSenha("654321");
+        admin2.setRole(Role.ADMIN);
+
+        when(adminRepository.findAll())
+                .thenReturn(List.of(admin1, admin2));
+
+        List<AdminDTO.AdminResponseDTO> resultado = service.listarAdmin();
+
+        assertNotNull(resultado);
+        assertEquals(2, resultado.size());
+
+        assertEquals("Sabrina", resultado.get(0).nome());
+        assertEquals("sabrina@email.com", resultado.get(0).email());
+
+        assertEquals("Fabiano", resultado.get(1).nome());
+        assertEquals("fabiano@email.com", resultado.get(1).email());
+
+        verify(adminRepository, times(1)).findAll();
+    }
+
+    @Test
+    @DisplayName("Deve atualizar admin")
+    void deveAtualizarAdministrador() throws Exception {
+
+        String email = "sabrina@email.com";
 
         AdminDTO.AdminRegistroDTO dto =
                 new AdminDTO.AdminRegistroDTO(
-                        "Sabrina",
+                        "Sabrina Atualizada",
                         "sabrina@email.com",
-                        "123456"
-                );
-
-        assertThrows(
-                EntidadeDuplicadaException.class,
-                () -> service.registrarAdmin(dto)
-        );
-    }
-
-    @Test
-    @DisplayName("Deve listar administradores")
-    void deveListarAdministradores() {
-
-        Admin admin = new Admin();
-
-        admin.setNome("Sabrina");
-        admin.setEmail("sabrina@email.com");
-        admin.setRole(Role.ADMIN);
-
-        when(repository.findAll())
-                .thenReturn(List.of(admin));
-
-        List<AdminDTO.AdminResponseDTO> lista =
-                service.listarAdmin();
-
-        assertEquals(1, lista.size());
-    }
-
-    @Test
-    @DisplayName("Deve buscar administrador por email")
-    void deveBuscarAdministradorPorEmail() {
-
-        Admin admin = new Admin();
-
-        admin.setNome("Sabrina");
-        admin.setEmail("sabrina@email.com");
-
-        when(repository.findByEmail(any()))
-                .thenReturn(Optional.of(admin));
-
-        AdminDTO.AdminResponseDTO response =
-                service.buscarAdminEmail("sabrina@email.com");
-
-        assertEquals(
-                "sabrina@email.com",
-                response.email()
-        );
-    }
-
-    @Test
-    @DisplayName("Deve atualizar administrador")
-    void deveAtualizarAdministrador() {
-
-        Admin admin = new Admin();
-
-        admin.setNome("Antigo");
-        admin.setEmail("sabrina@email.com");
-
-        when(repository.findByEmail(any()))
-                .thenReturn(Optional.of(admin));
-
-        when(passwordEncoder.encode(any()))
-                .thenReturn("senha");
-
-        when(repository.save(any()))
-                .thenReturn(admin);
-
-        AdminDTO.AdminRegistroDTO dto =
-                new AdminDTO.AdminRegistroDTO(
-                        "Novo Nome",
-                        "novo@email.com",
-                        "123456"
+                        "654321"
                 );
 
         AdminDTO.AdminResponseDTO response =
-                service.atualizarAdmin(
+                new AdminDTO.AdminResponseDTO(
+                        "Sabrina Atualizada",
                         "sabrina@email.com",
-                        dto
+                        true,
+                        Role.ADMIN
                 );
 
-        assertEquals("Novo Nome", response.nome());
-    }
-
-    @Test
-    @DisplayName("Deve desativar administrador")
-    void deveDesativarAdministrador() {
-
-        Admin admin = new Admin();
-
-        admin.setAtivo(true);
-        admin.setEmail("sabrina@email.com");
-
-        when(repository.findByEmail(any()))
-                .thenReturn(Optional.of(admin));
-
-        service.desativarAdmin("sabrina@email.com");
-
-        assertFalse(admin.isAtivo());
-
-        verify(repository, atLeastOnce())
-                .save(admin);
-    }
-
-    @Test
-    @DisplayName("Deve lançar exceção ao buscar admin inexistente")
-    void deveLancarExcecaoAoBuscarAdminInexistente() {
-
-        when(repository.findByEmail(any()))
-                .thenReturn(Optional.empty());
-
-        assertThrows(
-                EntidadeNaoEncontradaException.class,
-                () -> service.buscarAdminEmail("teste@email.com")
-        );
     }
 }

@@ -78,7 +78,7 @@ public class EmailTokenService {
 
         EmailToken emailToken = emailTokenRepository.findByUsuario(usuario);
 
-        if (!Objects.equals(String.valueOf(emailToken.getToken()), dto.token())) {
+        if (!Objects.equals(emailToken.getToken(), dto.token())) {
             throw new RegraNegocioException("EmailToken inválido");
         }
 
