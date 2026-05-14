@@ -25,6 +25,7 @@ import static org.hamcrest.Matchers.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class AnimalControllerIntegrationTest {
+    //Esses testes foram feitos por Rafael Borges Gibertoni
 
     @LocalServerPort
     private int port;

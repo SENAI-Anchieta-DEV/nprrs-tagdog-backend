@@ -16,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 class AdminRepositoryIntegrationTest {
+    //Devido a um erro de merge, o nome do autor foi sobrescrito. Esses testes foram feitos por Sabrina Matos Almeida
 
     @Autowired
     private AdminRepository repository;

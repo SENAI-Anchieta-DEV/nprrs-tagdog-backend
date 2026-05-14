@@ -24,6 +24,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(EmailTokenController.class)
 @AutoConfigureMockMvc(addFilters = false) // Desabilita filtros de segurança para focar na lógica do controller
 public class EmailTokenControllerTest {
+    //Devido a um erro de merge, o nome do autor foi sobrescrito. Esses testes foram feitos por Nicoly de Oliveira Machado
+
     @Autowired
     private MockMvc mockMvc;
 

@@ -28,6 +28,7 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class AuthServiceTest {
+    //Esses testes foram feitos por Sabrina Matos Almeida
 
     @InjectMocks
     private AuthService authService;

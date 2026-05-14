@@ -18,6 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest // Configura banco em memória e apenas JPA
 class AnimalRepositoryTest {
+    //Esses testes foram feitos por Rafael Borges Gibertoni
 
     @Autowired
     private AnimalRepository repository;

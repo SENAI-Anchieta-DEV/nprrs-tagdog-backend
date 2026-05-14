@@ -31,6 +31,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class TagControllerIntegrationTest {
+    //Esses testes foram feitos por Raquel Yukie Tsuji
 
     @LocalServerPort
     private int port;
@@ -184,6 +185,3 @@ class TagControllerIntegrationTest {
         assertEquals(animal.getMatricula(), tag.getAnimal().getMatricula());
     }
 }
-
-//Feito por Raquel Yukie Tsuji
-

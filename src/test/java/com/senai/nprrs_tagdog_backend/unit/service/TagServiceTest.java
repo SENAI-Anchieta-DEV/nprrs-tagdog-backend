@@ -17,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class TagServiceTest {
+    //Esses testes foram feitos por Raquel Yukie Tsuji
 
     @Mock private AnimalRepository animalRepository;
     @Mock private LocalCoordenadasRepository localCoordenadasRepository;

@@ -25,6 +25,7 @@ import static org.hamcrest.Matchers.containsString;
 @ActiveProfiles("test")
 @AutoConfigureMockMvc(addFilters = false)
 class LocalCoordenadasControllerIntegrationTest {
+    //Devido a um erro de merge, o nome do autor foi sobrescrito. Esses testes foram feitos por Nicoly de Oliveira Machado
 
     @Autowired
     private MockMvc mockMvc;

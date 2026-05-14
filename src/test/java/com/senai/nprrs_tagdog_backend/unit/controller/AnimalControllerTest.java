@@ -35,6 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(AnimalController.class)
 @AutoConfigureMockMvc(addFilters = false)
 public class AnimalControllerTest {
+    //Esses testes foram feitos por Rafael Borges Gibertoni
 
     @Autowired
     private MockMvc mockMvc;

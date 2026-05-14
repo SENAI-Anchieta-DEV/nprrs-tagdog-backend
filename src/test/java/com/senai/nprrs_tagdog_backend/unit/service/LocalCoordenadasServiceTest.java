@@ -22,6 +22,7 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class LocalCoordenadasServiceTest {
+    //Devido a um erro de merge, o nome do autor foi sobrescrito. Esses testes foram feitos por Nicoly de Oliveira Machado
 
     @Mock
     private LocalCoordenadasRepository localCoordenadasRepository;

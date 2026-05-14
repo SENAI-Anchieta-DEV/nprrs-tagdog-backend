@@ -14,6 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DataJpaTest
 @ActiveProfiles("test")
 class TutorRepositoryIntegrationTest {
+    //Devido a um erro de merge, o nome do autor foi sobrescrito. Esses testes foram feitos por Pietra Rainone Rocha
 
     @Autowired
     private TutorRepository repository;
