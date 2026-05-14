@@ -27,18 +27,15 @@ class EmailTokenRepositoryIntegrationTest {
     @Test
     @DisplayName("Deve buscar email token por usuário")
     void deveBuscarEmailTokenPorUsuario() {
-        // 1. Criar uma instância de uma classe CONCRETA (Tutor)
-        // Note que o tipo da variável ainda pode ser Usuario
+
         Usuario usuario = new Tutor();
         usuario.setNome("João");
         usuario.setEmail("joao@email.com");
         usuario.setSenha("senha123");
         usuario.setRole(Role.TUTOR);
 
-        // Salva o tutor no banco (que também é um usuário)
         usuarioRepository.save(usuario);
 
-        // 2. Criar e persistir o EmailToken
         EmailToken token = new EmailToken();
         token.setToken(123456);
         token.setUsuario(usuario);
@@ -47,10 +44,8 @@ class EmailTokenRepositoryIntegrationTest {
 
         repository.save(token);
 
-        // 3. Executar o método de busca do repository
         EmailToken resultado = repository.findByUsuario(usuario);
 
-        // 4. Assertivas
         assertNotNull(resultado);
         assertEquals(123456, resultado.getToken());
         assertEquals("joao@email.com", resultado.getUsuario().getEmail());

@@ -32,7 +32,7 @@ import static org.hamcrest.Matchers.notNullValue;
         properties = "management.health.mail.enabled=false"
 )
 @ActiveProfiles("test")
-@AutoConfigureMockMvc(addFilters = false) // 🔥 DESABILITA SECURITY NO TEST
+@AutoConfigureMockMvc(addFilters = false)
 class EmailTokenControllerIntegrationTest {
 
     @LocalServerPort

@@ -78,7 +78,6 @@ public class EmailTokenServiceTest {
 
         assertDoesNotThrow(() -> service.validarEmailToken(senhaDTO));
 
-        // Agora o verify vai funcionar porque o import está correto
         verify(usuarioRepository, times(1)).save(usuario);
         verify(emailTokenRepository, times(1)).delete(emailToken);
         assertEquals("senhaCriptografada", usuario.getSenha());

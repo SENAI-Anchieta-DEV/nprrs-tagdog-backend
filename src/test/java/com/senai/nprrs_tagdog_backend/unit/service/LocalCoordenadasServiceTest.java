@@ -62,7 +62,6 @@ public class LocalCoordenadasServiceTest {
         assertNotNull(resultado);
         assertEquals(localDTO.cep(), resultado.cep());
 
-        // No seu service o registrar chama findAll duas vezes: uma no IF e outra no deleteAll
         verify(localCoordenadasRepository, atLeastOnce()).deleteAll(any());
         verify(localCoordenadasRepository).save(any(LocalCoordenadas.class));
     }
@@ -77,7 +76,6 @@ public class LocalCoordenadasServiceTest {
         assertNotNull(resultado);
         assertEquals("04023-001", resultado.cep());
 
-        // CORREÇÃO: O método buscar() do seu service chama findAll() apenas 1 vez
         verify(localCoordenadasRepository, times(1)).findAll();
     }
 

@@ -42,7 +42,7 @@ public class EmailTokenControllerTest {
     @Test
     @DisplayName("Deve validar token e alterar senha retornando status 204")
     void deveValidarTokenEAlterarSenha() throws Exception {
-        // Criamos o DTO que será enviado no corpo da requisição
+
         SenhaDTO senhaDTO = new SenhaDTO(
                 "tutor@email.com",
                 "123456",
