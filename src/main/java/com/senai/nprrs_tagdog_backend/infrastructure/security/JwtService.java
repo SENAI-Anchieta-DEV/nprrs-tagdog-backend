@@ -1,5 +1,6 @@
 package com.senai.nprrs_tagdog_backend.infrastructure.security;
 
+import com.senai.nprrs_tagdog_backend.domain.entity.Admin;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -65,4 +66,6 @@ public class JwtService {
                 .getExpiration();
         return expiration.before(new Date());
     }
+
+
 }

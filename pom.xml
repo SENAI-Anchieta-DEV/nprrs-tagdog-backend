@@ -6,32 +6,21 @@
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>3.2.5</version>
-		<relativePath/> <!-- lookup parent from repository -->
-	</parent>
+		<relativePath/> </parent>
 	<groupId>com.senai</groupId>
 	<artifactId>nprrs-tagdog-backend</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>nprrs-tagdog-backend</name>
 	<description>O TAGDOG é um sistema de controle de acesso e monitoramento de pets voltado para hotéis e estabelecimentos especializados em hospedagem animal.</description>
-	<url/>
-	<licenses>
-		<license/>
-	</licenses>
-	<developers>
-		<developer/>
-	</developers>
-	<scm>
-		<connection/>
-		<developerConnection/>
-		<tag/>
-		<url/>
-	</scm>
+
 	<properties>
 		<java.version>21</java.version>
 		<jjwt.version>0.11.5</jjwt.version>
 		<flyway.version>11.13.0</flyway.version>
 		<rest-assured.version>5.5.0</rest-assured.version>
+		<lombok.version>1.18.30</lombok.version>
 	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -71,6 +60,7 @@
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
+			<version>${lombok.version}</version>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
@@ -142,7 +132,10 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.11.0</version>
 				<configuration>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
 					<annotationProcessorPaths>
 						<path>
 							<groupId>org.projectlombok</groupId>
@@ -166,5 +159,4 @@
 			</plugin>
 		</plugins>
 	</build>
-
 </project>
