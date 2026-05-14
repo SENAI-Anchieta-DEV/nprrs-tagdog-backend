@@ -31,8 +31,8 @@ public class TagController {
 
     @MqttSubscriber("0806meupet/rastreador/coordenadas")
     public void salvar(@MqttPayload TagDTO.TagRegistroDTO dto) {
-        log.info("Dado do LOCAL recebido: " + dto);
         tagService.salvar(dto);
+        log.info(dto);
     }
 
     @Operation(
