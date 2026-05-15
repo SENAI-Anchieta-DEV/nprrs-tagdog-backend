@@ -23,6 +23,7 @@ import static org.hamcrest.Matchers.notNullValue;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class AuthControllerIntegrationTest {
+    //Esses testes foram feitos por Sabrina Matos Almeida
 
     @LocalServerPort
     private int port;

@@ -27,6 +27,7 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class EmailTokenServiceTest {
+    //Devido a um erro de merge, o nome do autor foi sobrescrito. Esses testes foram feitos por Nicoly de Oliveira Machado
 
     @Mock
     private EmailTokenRepository emailTokenRepository;

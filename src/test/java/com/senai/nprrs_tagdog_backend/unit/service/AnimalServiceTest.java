@@ -25,6 +25,7 @@ import static org.mockito.Mockito.*;
 
     @ExtendWith(MockitoExtension.class)
     class AnimalServiceTest {
+        //Esses testes foram feitos por Rafael Borges Gibertoni
 
         @Mock
         private AnimalRepository animalRepository;

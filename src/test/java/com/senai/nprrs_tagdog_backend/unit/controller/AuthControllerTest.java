@@ -42,6 +42,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 )
 @AutoConfigureMockMvc(addFilters = false)
 class AuthControllerTest {
+    //Esses testes foram feitos por Sabrina Matos Almeida
 
     @Autowired
     private MockMvc mockMvc;

@@ -22,6 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(controllers = TutorController.class)
 @AutoConfigureMockMvc(addFilters = false)
 class TutorControllerTest {
+    //Devido a um erro de merge, o nome do autor foi sobrescrito. Esses testes foram feitos por Pietra Rainone Rocha
 
     @Autowired
     private MockMvc mockMvc;

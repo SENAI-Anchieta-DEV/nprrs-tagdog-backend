@@ -34,6 +34,7 @@ import static org.hamcrest.Matchers.notNullValue;
 @ActiveProfiles("test")
 @AutoConfigureMockMvc(addFilters = false)
 class EmailTokenControllerIntegrationTest {
+    //Devido a um erro de merge, o nome do autor foi sobrescrito. Esses testes foram feitos por Nicoly de Oliveira Machado
 
     @LocalServerPort
     private int port;

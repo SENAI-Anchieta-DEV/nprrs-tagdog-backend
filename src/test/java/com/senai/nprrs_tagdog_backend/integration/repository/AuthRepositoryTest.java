@@ -17,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 class AuthRepositoryTest {
+    //Esses testes foram feitos por Sabrina Matos Almeida
 
     @Autowired
     private UsuarioRepository usuarios;
