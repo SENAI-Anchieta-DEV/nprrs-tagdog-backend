@@ -55,7 +55,7 @@ class TutorControllerIntegrationTest {
         RestAssured.baseURI = "http://localhost";
         RestAssured.port = port;
 
-        // Limpeza na ordem correta (filhos primeiro se não houver Cascade)
+
         animalRepository.deleteAll();
         tutorRepository.deleteAll();
         adminRepository.deleteAll();
@@ -74,8 +74,7 @@ class TutorControllerIntegrationTest {
     @DisplayName("Deve registrar um novo tutor com animal e endereço com sucesso")
     void deveRegistrarTutorViaApi() {
 
-        // 1. Verifique se o formato da data (2022-05-20) é aceito pelo seu banco/DTO.
-        // Se der erro de data, tente usar LocalDate.now() apenas para testar.
+
         AnimalDTO.AnimalRegistroDTO animalDTO = new AnimalDTO.AnimalRegistroDTO(
                 "http://link-imagem.com/foto.jpg",
                 "Bob",
@@ -105,14 +104,13 @@ class TutorControllerIntegrationTest {
                 .header("Authorization", "Bearer " + adminToken)
                 .body(payload)
                 .when()
-                .post("/api/tutores") // CORREÇÃO 1: Adicionado o "es" no final da rota
+                .post("/api/tutores")
                 .then()
                 .log().all()
                 .statusCode(201)
                 .body("nome", is("João Silva"))
                 .body("email", is("joao.silva@email.com"))
                 .body("cpf", is("123.456.789-00"))
-                // CORREÇÃO 2: Verifique se o retorno vem como 'animais' (lista) ou 'animal' (objeto).
-                // Com base no seu DTO de registro, geralmente o retorno segue o nome da lista na Entity.
+
                 .body("animais[0].nome", is("Bob"));
     }}

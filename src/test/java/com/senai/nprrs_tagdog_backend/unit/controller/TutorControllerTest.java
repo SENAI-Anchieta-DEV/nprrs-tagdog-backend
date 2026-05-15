@@ -33,7 +33,7 @@ class TutorControllerTest {
     @MockBean
     private JwtService jwtService;
 
-    // CORREÇÃO 1: Mockar o serviço que o filtro de segurança exige
+
     @MockBean
     private UsuarioDetailsService usuarioDetailsService;
 
@@ -42,8 +42,7 @@ class TutorControllerTest {
     void deveListarTutores() throws Exception {
         when(tutorService.listarTutores()).thenReturn(List.of());
 
-        // CORREÇÃO 2: Verifique se a rota é /api/tutor ou /api/tutores
-        // Como o cadastro foi em /api/tutores, aqui provavelmente também é plural
+
         mockMvc.perform(get("/api/tutores")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
