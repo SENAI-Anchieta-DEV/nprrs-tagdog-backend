@@ -85,7 +85,7 @@ public class AnimalService {
     public AnimalDTO.AnimalResponseDTO buscarPorMatricula(String matricula) {
 
         Animal animal = repository.findByMatricula(matricula)
-                .orElseThrow(() -> new RuntimeException("Animal não encontrado"));
+                .orElseThrow(() -> new EntidadeNaoEncontradaException("Animal"));
 
         Tutor tutor = tutorRepository.findByAnimais(animal);
 
