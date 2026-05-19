@@ -1,3 +1,6 @@
 
 #mosquitto_pub -h localhost -t "0806meupet/rastreador/coordenadas" -m '{\"numero\": \"1\", \"latitude\": \"-23.591316433799992\", \"longitude\": \"-46.64509172099156\", \"dataCriado\": \"25/03/2026 10:00:00\"}'
 #mosquitto_pub -h localhost -t "0806meupet/rastreador/coordenadas" -m '{\"numero\": \"1\", \"latitude\": \"-23.598687053341486\", \"longitude\": \"-46.635431711971236\", \"dataCriado\": \"25/03/2026 11:00:00\"}'
+
+#mosquitto_pub -h localhost -t "0806meupet/rastreador/coordenadas" -m '{\"mac\": \"AA:BB:CC:DD:EE:FF\", \"bateria_pct\": 85, \"sinal\": -65, \"rede\": \"WiFi_Local\", \"modo\": \"Normal\", \"lat\": \"-23.591316\", \"lon\": \"-46.645091\", \"velocidade_kmh\": 0.5, \"direcao_graus\": 120.0, \"precisao_hdop\": 1.2, \"distancia_casa_m\": 5, \"fuga\": false, \"atividade\": \"Parado/Dormindo\", \"data_hora\": \"25/03/2026 10:00:00\"}'
+#mosquitto_pub -h localhost -t "0806meupet/rastreador/coordenadas" -m '{\"mac\": \"AA:BB:CC:DD:EE:FF\", \"bateria_pct\": 82, \"sinal\": 18, \"rede\": \"Celular_Nuvem\", \"modo\": \"Normal\", \"lat\": \"-23.598687\", \"lon\": \"-46.635431\", \"velocidade_kmh\": 8.5, \"direcao_graus\": 185.0, \"precisao_hdop\": 2.1, \"distancia_casa_m\": 850, \"fuga\": true, \"atividade\": \"Correndo/Carro\", \"data_hora\": \"25/03/2026 11:00:00\"}'
