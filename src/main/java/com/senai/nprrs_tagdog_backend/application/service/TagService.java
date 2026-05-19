@@ -34,6 +34,12 @@ public class TagService {
     public void salvar(TagDTO.TagRegistroDTO dto) {
         Tag tag = dto.toEntity();
 
+        if (tag.getLatitude() == null || tag.getLongitude() == null) {
+            log.info("Tag {} recebida sem coordenadas (Status: {}). Ignorando cálculos.",
+                    dto.numero(), dto.statusGps());
+            return;
+        }
+
         Animal animal = animalRepository.findByNumeroTag(dto.numero());
         if(animal != null){
             tag.setAnimal(animal);
@@ -43,19 +49,15 @@ public class TagService {
             tag.setAtivo(true);
         }
 
-        // Busca as coordenadas do local autorizado
         LocalCoordenadas localCoordenadas = localCoordenadasRepository.findAll().stream().findFirst()
                 .orElseThrow(() -> new EntidadeNaoEncontradaException("Local Coordenadas"));
 
-        // Define se a tag atual está fora do limite
         if(isForaDoLocalAutorizado(tag, localCoordenadas)){
             tag.setSaidaNaoAutorizada(true);
         }
 
-        // Busca a última posição registrada deste dispositivo
         Optional<Tag> ultimaTagOpt = tagRepository.findFirstByNumeroOrderByDataCriadoDesc(dto.numero());
 
-        // Verifica se é uma nova fuga (transição de "dentro" para "fora")
         boolean isNovaFuga = false;
         if (tag.isSaidaNaoAutorizada()) {
             if (ultimaTagOpt.isPresent()) {
@@ -69,34 +71,29 @@ public class TagService {
             Tag ultimaTag = ultimaTagOpt.get();
 
             try {
-                double latAtual = Double.parseDouble(tag.getLatitude());
-                double lonAtual = Double.parseDouble(tag.getLongitude());
-                double latAnterior = Double.parseDouble(ultimaTag.getLatitude());
-                double lonAnterior = Double.parseDouble(ultimaTag.getLongitude());
+                if (ultimaTag.getLatitude() != null && ultimaTag.getLongitude() != null) {
+                    double latAtual = Double.parseDouble(tag.getLatitude());
+                    double lonAtual = Double.parseDouble(tag.getLongitude());
+                    double latAnterior = Double.parseDouble(ultimaTag.getLatitude());
+                    double lonAnterior = Double.parseDouble(ultimaTag.getLongitude());
 
-                double distancia = calcularDistanciaEmMetros(
-                        latAnterior, lonAnterior, latAtual, lonAtual
-                );
+                    double distancia = calcularDistanciaEmMetros(latAnterior, lonAnterior, latAtual, lonAtual);
 
-                // Salva se o animal se moveu mais que a distância mínima OU se acabou de fugir
-                if (distancia > DISTANCIA_MINIMA_METROS || isNovaFuga) {
-                    log.info("Cadastrar local da Tag com numero " +  tag.getNumero());
-                    tagRepository.save(tag);
-
-                    if (isNovaFuga) {
-                        mandarEmailAlertaFuga(tag);
+                    if (distancia > DISTANCIA_MINIMA_METROS || isNovaFuga) {
+                        log.info("Cadastrar local da Tag com numero {}", tag.getNumero());
+                        tagRepository.save(tag);
+                        if (isNovaFuga) mandarEmailAlertaFuga(tag);
                     }
+                } else {
+                    tagRepository.save(tag);
                 }
             } catch (NumberFormatException e) {
-                throw new RegraNegocioException("Erro ao converter coordenadas: " + e.getMessage());
+                log.error("Erro ao converter coordenadas para a Tag {}: {}", tag.getNumero(), e.getMessage());
             }
         } else {
-            // Primeiro registro da tag
-            log.info("Cadastrar local da Tag com numero " +  tag.getNumero());
+            log.info("Primeiro registro da Tag com numero {}", tag.getNumero());
             tagRepository.save(tag);
-            if (isNovaFuga) {
-                mandarEmailAlertaFuga(tag);
-            }
+            if (isNovaFuga) mandarEmailAlertaFuga(tag);
         }
     }
 
@@ -114,6 +111,10 @@ public class TagService {
     }
 
     public boolean isForaDoLocalAutorizado(Tag tag, LocalCoordenadas localAutorizado) {
+        if (tag.getLatitude() == null || localAutorizado.getLatitude() == null) {
+            return false;
+        }
+
         try {
             double latTag = Double.parseDouble(tag.getLatitude());
             double lonTag = Double.parseDouble(tag.getLongitude());
@@ -125,8 +126,9 @@ public class TagService {
 
             return distanciaDaBase > localAutorizado.getRaio();
 
-        } catch (NumberFormatException e) {
-            throw new RegraNegocioException("Coordenadas inválidas para cálculo de cerca virtual.");
+        } catch (NumberFormatException | NullPointerException e) {
+            log.error("Falha no cálculo da cerca virtual: dados inválidos.");
+            return false;
         }
     }
 
