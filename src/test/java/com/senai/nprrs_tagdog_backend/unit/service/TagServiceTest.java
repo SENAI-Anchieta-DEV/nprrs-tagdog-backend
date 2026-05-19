@@ -35,7 +35,7 @@ class TagServiceTest {
     }
 
     private TagDTO.TagRegistroDTO criarTagDTO(String numero, String latitude, String longitude) {
-        return new TagDTO.TagRegistroDTO(numero, latitude, longitude, "25/03/2026 11:00:00");
+        return new TagDTO.TagRegistroDTO(numero, 0, 0, " ", " ", latitude, longitude, 0.0, false, " ", " ", 0, "25/03/2026 11:00:00");
     }
 
     private Animal criarAnimal(String numeroTag) {
@@ -97,7 +97,7 @@ class TagServiceTest {
     @Test
     @DisplayName("Deve marcar saída não autorizada e enviar email")
     void deveMarcarSaidaNaoAutorizadaEEnviarEmail() {
-        TagDTO.TagRegistroDTO dto = criarTagDTO("TAG-003", "100", "100"); // Fora do local
+        TagDTO.TagRegistroDTO dto = criarTagDTO("TAG-003", "100", "100");
         Animal animal = criarAnimal("TAG-003");
         LocalCoordenadas local = criarLocal();
         Tutor tutor = Tutor.builder().nome("João").email("joao@email.com").animais(List.of(animal)).build();
