@@ -13,6 +13,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.net.URI;
 import java.util.List;
@@ -76,8 +77,9 @@ public class TutorController {
             }
     )
     @PostMapping
-    public ResponseEntity<TutorDTO.TutorResponseDTO> registrarTutor(@Valid @RequestBody TutorDTO.TutorRegistroDTO dto) {
-        TutorDTO.TutorResponseDTO novoTutor = tutorService.registrarTutor(dto);
+    public ResponseEntity<TutorDTO.TutorResponseDTO> registrarTutor(@Valid @RequestBody TutorDTO.TutorRegistroDTO dto,
+                                                                    @RequestPart(value = "imagem", required = false) MultipartFile imagem) {
+        TutorDTO.TutorResponseDTO novoTutor = tutorService.registrarTutor(dto, imagem);
         return ResponseEntity.created(
                 URI.create("/api/tutores/email/" + novoTutor.email())
         ).body(novoTutor);

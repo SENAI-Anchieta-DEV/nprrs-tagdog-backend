@@ -5,6 +5,7 @@ import com.senai.nprrs_tagdog_backend.domain.entity.Animal;
 import com.senai.nprrs_tagdog_backend.domain.entity.CheckInCheckOut;
 import com.senai.nprrs_tagdog_backend.domain.entity.CheckInOuCheckOut;
 import com.senai.nprrs_tagdog_backend.domain.entity.Tutor;
+import com.senai.nprrs_tagdog_backend.domain.exceptions.DadosInvalidosException;
 import com.senai.nprrs_tagdog_backend.domain.exceptions.EntidadeNaoEncontradaException;
 import com.senai.nprrs_tagdog_backend.domain.exceptions.RegraNegocioException;
 import com.senai.nprrs_tagdog_backend.domain.repository.AnimalRepository;
@@ -15,9 +16,15 @@ import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -28,8 +35,10 @@ public class AnimalService {
     private final TutorRepository tutorRepository;
     private final CheckInCheckOutRepository checkInCheckOutRepository;
 
+    private final String UPLOAD_DIR = "uploads/";
+
     @Transactional
-    public AnimalDTO.AnimalResponseDTO registrar(AnimalDTO.AnimalRegistroDTO dto, String emailOuCpfTutor) {
+    public AnimalDTO.AnimalResponseDTO registrar(AnimalDTO.AnimalRegistroDTO dto, String emailOuCpfTutor, MultipartFile arquivoImagem) {
 
         Tutor tutor = new Tutor();
         if(tutorRepository.findByEmail(emailOuCpfTutor) != null){
@@ -41,6 +50,24 @@ public class AnimalService {
         }
 
         Animal animal = dto.toEntity();
+
+        if (arquivoImagem != null && !arquivoImagem.isEmpty()) {
+            try {
+                Path uploadPath = Paths.get(UPLOAD_DIR);
+                if (!Files.exists(uploadPath)) {
+                    Files.createDirectories(uploadPath);
+                }
+                String nomeArquivo = UUID.randomUUID().toString() + "_" + arquivoImagem.getOriginalFilename();
+                Path path = Paths.get(UPLOAD_DIR + nomeArquivo);
+
+                Files.write(path, arquivoImagem.getBytes());
+
+                animal.setImagem(nomeArquivo);
+
+            } catch (IOException e) {
+                throw new DadosInvalidosException("Erro ao processar a imagem do animal " + e);
+            }
+        }
 
         String novaMatricula;
         do {
@@ -94,7 +121,7 @@ public class AnimalService {
     }
 
     @Transactional
-    public AnimalDTO.AnimalResponseDTO atualizar(String matricula, AnimalDTO.AnimalRegistroDTO dto) {
+    public AnimalDTO.AnimalResponseDTO atualizar(String matricula, AnimalDTO.AnimalRegistroDTO dto, MultipartFile arquivoImagem) {
 
         Animal animal = repository.findByMatricula(matricula)
                 .orElseThrow(() -> new RuntimeException("Animal não encontrado"));
@@ -103,7 +130,25 @@ public class AnimalService {
         if(!animal.isAtivo()){
             throw new RegraNegocioException("Entidade inativa");
         }
-        animal.setImagem(dto.imagem());
+
+        if (arquivoImagem != null && !arquivoImagem.isEmpty()) {
+            try {
+                Path uploadPath = Paths.get(UPLOAD_DIR);
+                if (!Files.exists(uploadPath)) {
+                    Files.createDirectories(uploadPath);
+                }
+                String nomeArquivo = UUID.randomUUID().toString() + "_" + arquivoImagem.getOriginalFilename();
+                Path path = Paths.get(UPLOAD_DIR + nomeArquivo);
+
+                Files.write(path, arquivoImagem.getBytes());
+
+                animal.setImagem(nomeArquivo);
+
+            } catch (IOException e) {
+                throw new DadosInvalidosException("Erro ao processar a imagem do animal " + e);
+            }
+        }
+
         animal.setNome(dto.nome());
         animal.setRaca(dto.raca());
         animal.setSexo(dto.sexo());

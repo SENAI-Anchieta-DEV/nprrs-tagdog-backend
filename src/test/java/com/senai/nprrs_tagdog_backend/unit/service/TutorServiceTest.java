@@ -42,7 +42,7 @@ class TutorServiceTest {
         );
 
         assertThrows(RegraNegocioException.class, () -> {
-            tutorService.registrarTutor(dto);
+            tutorService.registrarTutor(dto, null);
         });
 
 

@@ -41,7 +41,6 @@ public class AnimalDTO {
     ) {
         public Animal toEntity() {
             return Animal.builder()
-                    .imagem(this.imagem)
                     .nome(this.nome)
                     .raca(this.raca)
                     .sexo(this.sexo)

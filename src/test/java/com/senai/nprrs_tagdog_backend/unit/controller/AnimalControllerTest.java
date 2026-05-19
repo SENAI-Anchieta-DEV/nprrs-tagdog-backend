@@ -95,7 +95,7 @@ public class AnimalControllerTest {
     @WithMockUser(username = "admin")
     @DisplayName("POST - Deve criar animal e retornar 201")
     void deveCriarAnimalComSucesso() throws Exception {
-        Mockito.when(animalService.registrar(any(), eq("admin@email.com")))
+        Mockito.when(animalService.registrar(any(AnimalDTO.AnimalRegistroDTO.class), eq("admin@email.com"), any()))
                 .thenReturn(responseDTO);
 
         mockMvc.perform(post("/api/animais/emailOuCpfTutor/{emailOuCpfTutor}", "admin@email.com")
@@ -134,7 +134,8 @@ public class AnimalControllerTest {
     @WithMockUser
     @DisplayName("PUT - Atualizar animal")
     void deveAtualizarAnimal() throws Exception {
-        Mockito.when(animalService.atualizar(eq("TD-12345"), any())).thenReturn(responseDTO);
+        Mockito.when(animalService.atualizar(eq("TD-12345"), any(AnimalDTO.AnimalRegistroDTO.class), any()))
+                .thenReturn(responseDTO);
 
         mockMvc.perform(put("/api/animais/matricula/TD-12345")
                         .contentType(MediaType.APPLICATION_JSON)

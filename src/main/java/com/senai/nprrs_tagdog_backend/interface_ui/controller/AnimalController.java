@@ -13,6 +13,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.net.URI;
 import java.util.List;
@@ -65,9 +66,10 @@ public class AnimalController {
     )
     @PostMapping("/emailOuCpfTutor/{emailOuCpfTutor}")
     public ResponseEntity<AnimalDTO.AnimalResponseDTO> criar(
-            @Valid @RequestBody AnimalDTO.AnimalRegistroDTO dto, @PathVariable String emailOuCpfTutor) {
+            @Valid @RequestBody AnimalDTO.AnimalRegistroDTO dto, @PathVariable String emailOuCpfTutor,
+            @RequestPart(value = "imagem", required = false) MultipartFile imagem) {
 
-        AnimalDTO.AnimalResponseDTO animal = service.registrar(dto, emailOuCpfTutor);
+        AnimalDTO.AnimalResponseDTO animal = service.registrar(dto, emailOuCpfTutor, imagem);
 
         return ResponseEntity.created(
                 URI.create("/api/animais/matricula/" + animal.matricula())
@@ -161,9 +163,10 @@ public class AnimalController {
     @PutMapping("/matricula/{matricula}")
     public ResponseEntity<AnimalDTO.AnimalResponseDTO> atualizar(
             @PathVariable String matricula,
-            @Valid @RequestBody AnimalDTO.AnimalRegistroDTO dto) {
+            @Valid @RequestBody AnimalDTO.AnimalRegistroDTO dto,
+            @RequestPart(value = "imagem", required = false) MultipartFile imagem) {
 
-        return ResponseEntity.ok(service.atualizar(matricula, dto));
+        return ResponseEntity.ok(service.atualizar(matricula, dto, imagem));
     }
 
     @Operation(

@@ -71,7 +71,7 @@ import static org.mockito.Mockito.*;
             when(tutorRepository.findByEmail(email)).thenReturn(tutorMock);
             when(animalRepository.existsByMatricula(anyString())).thenReturn(false);
 
-            AnimalDTO.AnimalResponseDTO response = animalService.registrar(registroDTOMock, email);
+            AnimalDTO.AnimalResponseDTO response = animalService.registrar(registroDTOMock, email, any());
 
             assertNotNull(response);
             verify(animalRepository).save(any(Animal.class));
@@ -87,7 +87,7 @@ import static org.mockito.Mockito.*;
             when(tutorRepository.findByCpf(identificadorInvalido)).thenReturn(null);
 
             assertThrows(EntidadeNaoEncontradaException.class, () -> {
-                animalService.registrar(registroDTOMock, identificadorInvalido);
+                animalService.registrar(registroDTOMock, identificadorInvalido, any());
             });
 
             verify(animalRepository, never()).save(any(Animal.class));
