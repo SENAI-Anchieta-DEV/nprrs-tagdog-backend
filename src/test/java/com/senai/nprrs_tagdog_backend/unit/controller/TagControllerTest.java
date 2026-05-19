@@ -74,7 +74,7 @@ class TagControllerTest {
     @DisplayName("Deve delegar salvar tag ao serviço diretamente")
     void deveDelegarSalvarTag() {
 
-        TagDTO.TagRegistroDTO dto = new TagDTO.TagRegistroDTO("TAG-003", "-23.550520", "-46.633308", "25/03/2026 11:00:00");
+        TagDTO.TagRegistroDTO dto = new TagDTO.TagRegistroDTO("TAG-003", 0, 0, " ", " ", "-23.550520", "-46.633308", 0.0, false, " ", " ", 0, "25/03/2026 11:00:00");
 
         TagController controller = new TagController(tagService);
         controller.salvar(dto);

@@ -169,8 +169,10 @@ class TagControllerIntegrationTest {
 
         TagDTO.TagRegistroDTO dto = new TagDTO.TagRegistroDTO(
                 animal.getNumeroTag(),
+                0, 0, " ", " ",
                 String.valueOf(-23.550520),
                 String.valueOf(-46.633308),
+                0.0, false, " ", " ", 0,
                 "25/03/2026 11:00:00"
         );
 
@@ -179,7 +181,7 @@ class TagControllerIntegrationTest {
         List<Tag> tags = tagRepository.findAll();
         assertEquals(1, tags.size());
 
-        Tag tag = tags.get(0); // List não tem getFirst()
+        Tag tag = tags.get(0);
         assertEquals(String.valueOf(-23.550520), tag.getLatitude());
         assertEquals(String.valueOf(-46.633308), tag.getLongitude());
         assertEquals(animal.getMatricula(), tag.getAnimal().getMatricula());
