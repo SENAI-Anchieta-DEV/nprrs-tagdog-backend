@@ -54,6 +54,7 @@ A aplicação utiliza variáveis de ambiente para gerenciar credenciais sensíve
 | **APP_CORS_ALLOWED_ORIGINS** | Origens permitidas (CORS) | `http://localhost:3000` |
 | **APP_BOOTSTRAP_ADMIN_EMAIL** | E-mail do admin inicial | `admin@email.com` |
 | **APP_BOOTSTRAP_ADMIN_PASSWORD** | Senha do admin inicial | `admin123` |
+
 _Nota: Certifique-se de que a variável EMAIL_PASSWORD esteja definida no seu ambiente antes de iniciar a aplicação para evitar falhas no bean de e-mail._
 
 ### Configurações de Produção (PostgreSQL)
