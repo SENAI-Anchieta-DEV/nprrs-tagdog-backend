@@ -37,7 +37,10 @@ public class AnimalDTO {
             
             @NotBlank
             @Schema(description = "Descrição do animal", example = "Alergia a chocolate")
-            String descricao
+            String descricao,
+
+            @Schema(description = "Numero da tag do animal")
+            String numeroTag
     ) {
         public Animal toEntity() {
             return Animal.builder()
@@ -48,6 +51,7 @@ public class AnimalDTO {
                     .porte(this.porte)
                     .dataNascimento(this.dataNascimento)
                     .descricao(this.descricao)
+                    .numeroTag(this.numeroTag)
                     .ativo(true)
                     .build();
         }

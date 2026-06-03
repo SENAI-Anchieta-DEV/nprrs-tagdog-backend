@@ -170,4 +170,12 @@ public class TagService {
                 .map(TagDTO.TagResponseDTO::fromEntity)
                 .toList();
     }
+
+    public List<TagDTO.TagResponseDTO> buscarPosicoesAtuaisPorTutor(String email) {
+        log.info("Listar Tag atuais por tutor: ");
+        return tagRepository.findUltimasPosicoesAtivasPorEmailTutor(email)
+                .stream()
+                .map(TagDTO.TagResponseDTO::fromEntity)
+                .toList();
+    }
 }
