@@ -1,5 +1,6 @@
 package com.senai.nprrs_tagdog_backend.application.service;
 
+import com.senai.nprrs_tagdog_backend.application.dto.AnimalDTO;
 import com.senai.nprrs_tagdog_backend.application.dto.TutorDTO;
 import com.senai.nprrs_tagdog_backend.domain.entity.Animal;
 import com.senai.nprrs_tagdog_backend.domain.entity.Endereco;
@@ -28,7 +29,7 @@ public class TutorService {
     private final PasswordEncoder passwordEncoder;
 
     public TutorDTO.TutorResponseDTO registrarTutor(TutorDTO.TutorRegistroDTO dto) {
-        if(dto.animal() == null){
+        if(dto.animal() == null || dto.animal().isEmpty()){
             throw new RegraNegocioException("Tutor deve possuir ao menos um animal");
         }
         if (tutorRepository.findByEmail(dto.email()) != null) {
@@ -41,30 +42,30 @@ public class TutorService {
         Tutor tutor = dto.toEntity();
         tutor.setSenha(passwordEncoder.encode(dto.senha()));
 
-        Animal animal = dto.animal().toEntity();
+        for (AnimalDTO.AnimalRegistroDTO animalDto : dto.animal()) {
+            Animal animal = animalDto.toEntity();
 
-        String novaMatricula;
-        do {
-            novaMatricula = RandomStringUtils.randomNumeric(5);
-        } while (animalRepository.existsByMatricula(novaMatricula) == true);
+            String novaMatricula;
+            do {
+                novaMatricula = "TD-" + RandomStringUtils.randomNumeric(5);
+            } while (animalRepository.existsByMatricula(novaMatricula));
 
-        animal.setMatricula("TD-" + novaMatricula);
-        tutor.getAnimais().add(animal);
+            animal.setMatricula(novaMatricula);
+
+            tutor.getAnimais().add(animal);
+        }
 
         log.info("Cadastrar Tutor com email " +  tutor.getEmail());
         tutorRepository.save(tutor);
 
-        if (tutor.getAnimais().isEmpty()) {
-            throw new OperacaoNaoPermitidaException("Nenhum animal vinculado.");
-        }
-        log.info("Cadastrar Animal com matricula " +  animal.getMatricula());
+        log.info("Cadastrando " + tutor.getAnimais().size() + " animal(is) para o tutor " + tutor.getEmail());
         animalRepository.saveAll(tutor.getAnimais());
 
         if (dto.endereco() == null) {
             throw new DadosInvalidosException("Endereço é obrigatório.");
         }
         log.info("Cadastrar Endereco do Tutor com email " +  tutor.getEmail());
-        enderecoRepository.save(dto.endereco().toEntity());
+        enderecoRepository.save(tutor.getEndereco());
 
         return TutorDTO.TutorResponseDTO.fromEntity(tutor);
     }

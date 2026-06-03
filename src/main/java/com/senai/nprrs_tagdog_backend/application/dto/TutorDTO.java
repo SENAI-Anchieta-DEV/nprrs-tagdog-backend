@@ -39,7 +39,7 @@ public class TutorDTO {
             EnderecoDTO.EnderecoRegistroDTO endereco,
             @NotNull
             @Schema(description = "Animail do tutor")
-            AnimalDTO.AnimalRegistroDTO animal
+            List<AnimalDTO.AnimalRegistroDTO> animal
     ) {
         public Tutor toEntity() {
             return Tutor.builder()

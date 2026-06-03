@@ -34,7 +34,7 @@ CREATE TABLE Usuario (
 -- =========================
 CREATE TABLE Animal (
     id VARCHAR(255) PRIMARY KEY,
-    imagem VARCHAR(255),
+    imagem TEXT,
     matricula VARCHAR(255) NOT NULL,
     nome VARCHAR(255) NOT NULL,
     raca VARCHAR(255) NOT NULL,
@@ -139,7 +139,13 @@ CREATE TABLE Check_In_Check_Out_Animais (
 -- );
 
 INSERT INTO Usuario (id, nome, email, senha, ativo, role, tipo_usuario)
-SELECT '51a8d2db-f882-4cc5-aded-57f5862fe54e', 'Admin', 'admin@exemplo.com', '$2a$10$.Z7BqZE4ubK1Nzfowu2ipOM6fTXzU.Z.40m5JXu8Rvg.DB2kJsAQy', TRUE, 'ADMIN', 'ADMIN'
+SELECT '51a8d2db-f882-4cc5-aded-57f5862fe54e', 'Admin', 'admin@email.com', '$2a$10$.Z7BqZE4ubK1Nzfowu2ipOM6fTXzU.Z.40m5JXu8Rvg.DB2kJsAQy', TRUE, 'ADMIN', 'ADMIN'
     WHERE NOT EXISTS (
     SELECT 1 FROM Usuario
+);
+
+INSERT INTO local_coordenadas (id, cep, latitude, longitude, raio)
+SELECT '05642b86-d664-46fd-8f4d-502c68b62633', '04023-001', '-23.591348043485937', '-46.64516553880177', 10
+    WHERE NOT EXISTS (
+    SELECT 1 FROM Local_Coordenadas
 );
