@@ -71,7 +71,7 @@ class AnimalControllerIntegrationTest {
     void deveCadastrarAnimalComSucesso() {
         AnimalDTO.AnimalRegistroDTO payload = new AnimalDTO.AnimalRegistroDTO(
                 "", "Bob", "Golden Retriever", SexoAnimal.MACHO,
-                PorteAnimal.GRANDE, LocalDate.of(2026, 2, 19), "Alergia a chocolate"
+                PorteAnimal.GRANDE, LocalDate.of(2026, 2, 19), "Alergia a chocolate", ""
         );
 
         given()
@@ -145,7 +145,7 @@ class AnimalControllerIntegrationTest {
     private AnimalDTO.AnimalResponseDTO cadastrarAnimalMock() {
         AnimalDTO.AnimalRegistroDTO payload = new AnimalDTO.AnimalRegistroDTO(
                 "", "Bob", "Golden Retriever", SexoAnimal.MACHO,
-                PorteAnimal.GRANDE, LocalDate.now(), "Desc"
+                PorteAnimal.GRANDE, LocalDate.now(), "Desc", ""
         );
 
         return given()

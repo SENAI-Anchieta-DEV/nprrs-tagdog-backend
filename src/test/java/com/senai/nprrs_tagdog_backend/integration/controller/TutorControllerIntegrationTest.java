@@ -22,6 +22,8 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
@@ -82,13 +84,16 @@ class TutorControllerIntegrationTest {
                 SexoAnimal.MACHO,
                 PorteAnimal.GRANDE,
                 LocalDate.of(2022, 5, 20),
-                "Cão muito dócil e brincalhão"
+                "Cão muito dócil e brincalhão",
+                ""
         );
 
         EnderecoDTO.EnderecoRegistroDTO enderecoDTO = new EnderecoDTO.EnderecoRegistroDTO(
                 "88000-000", "Rua das Flores", "Bairro Norte", "Florianópolis", "SC", "100", "Casa"
         );
 
+        List<AnimalDTO.AnimalRegistroDTO> animais = new ArrayList<>();
+        animais.add(animalDTO);
         TutorDTO.TutorRegistroDTO payload = new TutorDTO.TutorRegistroDTO(
                 "João Silva",
                 "joao.silva@email.com",
@@ -96,7 +101,7 @@ class TutorControllerIntegrationTest {
                 "123.456.789-00",
                 "(48) 99999-9999",
                 enderecoDTO,
-                animalDTO
+                animais
         );
 
         given()

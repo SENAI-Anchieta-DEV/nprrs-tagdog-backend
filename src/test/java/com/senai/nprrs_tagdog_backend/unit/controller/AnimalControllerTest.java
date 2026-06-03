@@ -71,7 +71,7 @@ public class AnimalControllerTest {
         // Entrada: AnimalRegistroDTO
         registroDTO = new AnimalDTO.AnimalRegistroDTO(
                 "imagem_base64", "Bob", "Golden Retriever", SexoAnimal.MACHO,
-                PorteAnimal.GRANDE, LocalDate.of(2026, 2, 19), "Alergia a chocolate"
+                PorteAnimal.GRANDE, LocalDate.of(2026, 2, 19), "Alergia a chocolate", ""
         );
 
         // Saída: AnimalResponseDTO (seguindo EXATAMENTE a ordem do seu record)
