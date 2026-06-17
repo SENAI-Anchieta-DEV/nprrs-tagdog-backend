@@ -18,6 +18,72 @@ O **TAGDOG** é um sistema de controle de acesso e monitoramento de pets desenvo
 * **Observabilidade:** Spring Actuator (Health Checks e Probes)
 
 ---
+## Pré-requisitos
+
+Antes de executar a aplicação, certifique-se de possuir os seguintes requisitos instalados:
+
+| Ferramenta                            | Versão Mínima          |
+| ------------------------------------- | ---------------------- |
+| Java JDK                              | 21                     |
+| Maven                                 | 3.9+                   |
+| Git                                   | Última versão estável  |
+| Broker MQTT (Mosquitto ou compatível) | 2.0+                   |
+| PostgreSQL                            | 15+ (somente produção) |
+
+### Dependências Externas
+
+A aplicação depende dos seguintes serviços:
+
+#### Banco de Dados
+
+* **H2 Database** para ambiente de desenvolvimento.
+* **PostgreSQL** para ambiente de produção.
+
+#### Broker MQTT
+
+Responsável pela comunicação entre os dispositivos IoT e a API.
+
+Configuração padrão:
+
+**Desenvolvimento**
+
+```text
+tcp://localhost:1883
+```
+
+**Produção**
+
+```text
+tcp://broker.emqx.io:1883
+```
+
+#### Serviço de E-mail
+
+A aplicação utiliza SMTP do Gmail para envio de tokens e notificações.
+
+É obrigatório configurar a variável:
+
+```env
+EMAIL_PASSWORD=<senha-de-aplicativo-gmail>
+```
+
+### Verificando o Ambiente
+
+Antes de iniciar o projeto, valide as instalações:
+
+```bash
+java --version
+mvn --version
+```
+
+Para validar o broker MQTT:
+
+```bash
+mosquitto_sub -h localhost -t teste
+```
+
+Caso não ocorram erros de conexão, o broker está disponível para uso.
+---
 
 ## Instalação de Dependências Externas
 Este projeto utiliza uma biblioteca customizada para o protocolo MQTT que não reside no Maven Central. Antes de compilar o projeto principal, você deve instalá-la manualmente:
